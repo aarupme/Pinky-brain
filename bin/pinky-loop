@@ -7,6 +7,8 @@ LOG_DIR="$ROOT_DIR/logs"
 STOP_FILE="$RUN_DIR/pinky-loop.stop"
 PID_FILE="$RUN_DIR/pinky-loop.pid"
 LOG_FILE="$LOG_DIR/pinky-loop.log"
+LAST_HASH_FILE="$RUN_DIR/pinky-loop.last-hash"
+LAST_SEND_FILE="$RUN_DIR/pinky-loop.last-send"
 
 mkdir -p "$RUN_DIR" "$LOG_DIR"
 
@@ -18,6 +20,21 @@ Usage:
   pinky-loop status
   pinky-loop once
 EOF
+}
+
+cooldown_ready() {
+  local now
+  local last
+  now="$(date +%s)"
+  if [[ ! -f "$LAST_SEND_FILE" ]]; then
+    return 0
+  fi
+  last="$(cat "$LAST_SEND_FILE" || echo 0)"
+  [[ $((now - last)) -ge 8 ]]
+}
+
+mark_sent() {
+  date +%s > "$LAST_SEND_FILE"
 }
 
 loop_once() {
@@ -50,6 +67,8 @@ loop_once() {
   signal_output="$(cat "$tmp_output" || true)"
   rm -f "$tmp_output"
   signal="$(printf "%s\n" "$signal_output" | awk -F= '/^signal=/{print $2; exit}')"
+  signal_hash="$(printf "%s\n" "$signal_output" | awk -F= '/^signal_hash=/{print $2; exit}')"
+  [[ -n "${signal_hash:-}" ]] || signal_hash="none"
 
   case "$signal" in
     none|pinky|brain|stop)
@@ -72,7 +91,27 @@ loop_once() {
       echo "loop=hard-stop"
       ;;
     pinky)
-      echo "loop=pinky-detected-no-autosend"
+      hash="$signal_hash"
+      last_hash=""
+      [[ -f "$LAST_HASH_FILE" ]] && last_hash="$(cat "$LAST_HASH_FILE" || true)"
+
+      if [[ "$hash" == "$last_hash" ]]; then
+        printf "%s autosend=skipped reason=same-hash hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$hash" >> "$LOG_FILE"
+        echo "loop=pinky-skipped-same-message"
+        return 0
+      fi
+
+      if ! cooldown_ready; then
+        printf "%s autosend=skipped reason=cooldown hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$hash" >> "$LOG_FILE"
+        echo "loop=pinky-skipped-cooldown"
+        return 0
+      fi
+
+      "$ROOT_DIR/bin/pinky-send" --text "l"
+      printf "%s\n" "$hash" > "$LAST_HASH_FILE"
+      mark_sent
+      printf "%s autosend=l hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$hash" >> "$LOG_FILE"
+      echo "loop=pinky-autosent-l"
       ;;
     none)
       echo "loop=watching"
@@ -148,6 +187,13 @@ status_loop() {
     echo "present"
   else
     echo "absent"
+  fi
+
+  echo "--- last hash ---"
+  if [[ -f "$LAST_HASH_FILE" ]]; then
+    cat "$LAST_HASH_FILE"
+  else
+    echo "none"
   fi
 
   echo "--- active loop processes ---"

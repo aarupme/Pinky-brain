@@ -4,24 +4,29 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STATE_DIR="$ROOT_DIR/.run"
 STATE_FILE="$STATE_DIR/pinky-signal.state"
+HASH_FILE="$STATE_DIR/pinky-signal.hash"
 LOG_FILE="$ROOT_DIR/logs/pinky-signal.log"
 
 mkdir -p "$STATE_DIR" "$ROOT_DIR/logs"
 
-signal_output="$("$ROOT_DIR/bin/pinky-detect-signal")"
-signal="${signal_output#signal=}"
+detect_output="$("$ROOT_DIR/bin/pinky-detect-signal")"
+signal="$(printf "%s\n" "$detect_output" | awk -F= '/^signal=/{print $2; exit}')"
+signal_hash="$(printf "%s\n" "$detect_output" | awk -F= '/^signal_hash=/{print $2; exit}')"
 
 case "$signal" in
   none|pinky|brain|stop)
     ;;
   *)
-    echo "pinky-watch-once error: unknown signal output: $signal_output" >&2
+    echo "pinky-watch-once error: unknown signal output: $detect_output" >&2
     exit 1
     ;;
 esac
 
+[[ -n "${signal_hash:-}" ]] || signal_hash="none"
+
 printf "%s\n" "$signal" > "$STATE_FILE"
-printf "%s signal=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$signal" >> "$LOG_FILE"
+printf "%s\n" "$signal_hash" > "$HASH_FILE"
+printf "%s signal=%s signal_hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$signal" "$signal_hash" >> "$LOG_FILE"
 
 case "$signal" in
   pinky)
@@ -38,5 +43,7 @@ case "$signal" in
 esac
 
 echo "signal=$signal"
+echo "signal_hash=$signal_hash"
 echo "state_file=$STATE_FILE"
+echo "hash_file=$HASH_FILE"
 echo "log_file=$LOG_FILE"

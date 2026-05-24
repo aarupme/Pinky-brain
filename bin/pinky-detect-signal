@@ -4,7 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP_FILE="$(mktemp)"
 SIGNAL_FILE="$(mktemp)"
-trap 'rm -f "$TMP_FILE" "$SIGNAL_FILE"' EXIT
+CONTEXT_FILE="$(mktemp)"
+trap 'rm -f "$TMP_FILE" "$SIGNAL_FILE" "$CONTEXT_FILE"' EXIT
 
 set +e
 "$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1
@@ -16,20 +17,37 @@ if [[ "$read_status" -ne 0 ]]; then
   exit 1
 fi
 
-tail -60 "$TMP_FILE" > "$TMP_FILE.tail"
+signal_count=0
 
 while IFS= read -r line; do
   cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
 
   case "$cleaned" in
-    "🐭") printf "%s\n" "pinky" > "$SIGNAL_FILE" ;;
-    "🧠"|"<0001f9e0>") printf "%s\n" "brain" > "$SIGNAL_FILE" ;;
-    "🛑") printf "%s\n" "stop" > "$SIGNAL_FILE" ;;
+    "🐭")
+      signal_count=$((signal_count + 1))
+      printf "%s\n" "pinky" > "$SIGNAL_FILE"
+      printf "%s|%s\n" "$signal_count" "$cleaned" > "$CONTEXT_FILE"
+      ;;
+    "🧠"|"<0001f9e0>")
+      signal_count=$((signal_count + 1))
+      printf "%s\n" "brain" > "$SIGNAL_FILE"
+      printf "%s|%s\n" "$signal_count" "$cleaned" > "$CONTEXT_FILE"
+      ;;
+    "🛑")
+      signal_count=$((signal_count + 1))
+      printf "%s\n" "stop" > "$SIGNAL_FILE"
+      printf "%s|%s\n" "$signal_count" "$cleaned" > "$CONTEXT_FILE"
+      ;;
   esac
-done < "$TMP_FILE.tail"
+done < <(tail -120 "$TMP_FILE")
 
 if [[ -s "$SIGNAL_FILE" ]]; then
-  echo "signal=$(tail -1 "$SIGNAL_FILE")"
+  signal="$(tail -1 "$SIGNAL_FILE")"
+  context="$(tail -1 "$CONTEXT_FILE")"
+  hash="$(printf "%s" "$context" | shasum -a 256 | awk '{print $1}')"
+  echo "signal=$signal"
+  echo "signal_hash=$hash"
 else
   echo "signal=none"
+  echo "signal_hash=none"
 fi
