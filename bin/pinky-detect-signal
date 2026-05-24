@@ -6,23 +6,30 @@ TMP_FILE="$(mktemp)"
 SIGNAL_FILE="$(mktemp)"
 trap 'rm -f "$TMP_FILE" "$SIGNAL_FILE"' EXIT
 
-"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1 || {
+set +e
+"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1
+read_status="$?"
+set -e
+
+if [[ "$read_status" -ne 0 ]]; then
   echo "pinky-detect-signal error: failed to read visible ChatGPT text" >&2
   exit 1
-}
+fi
 
-tail -60 "$TMP_FILE" | while IFS= read -r line; do
+tail -60 "$TMP_FILE" > "$TMP_FILE.tail"
+
+while IFS= read -r line; do
   cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
 
   case "$cleaned" in
-    "🐭") echo "pinky" ;;
-    "🧠"|"<0001f9e0>") echo "brain" ;;
-    "🛑") echo "stop" ;;
+    "🐭") printf "%s\n" "pinky" > "$SIGNAL_FILE" ;;
+    "🧠"|"<0001f9e0>") printf "%s\n" "brain" > "$SIGNAL_FILE" ;;
+    "🛑") printf "%s\n" "stop" > "$SIGNAL_FILE" ;;
   esac
-done | tail -1 > "$SIGNAL_FILE"
+done < "$TMP_FILE.tail"
 
 if [[ -s "$SIGNAL_FILE" ]]; then
-  echo "signal=$(cat "$SIGNAL_FILE")"
+  echo "signal=$(tail -1 "$SIGNAL_FILE")"
 else
   echo "signal=none"
 fi

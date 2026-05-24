@@ -1,0 +1,186 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+LOG_DIR="$ROOT_DIR/logs"
+STOP_FILE="$RUN_DIR/pinky-loop.stop"
+PID_FILE="$RUN_DIR/pinky-loop.pid"
+LOG_FILE="$LOG_DIR/pinky-loop.log"
+
+mkdir -p "$RUN_DIR" "$LOG_DIR"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  pinky-loop start
+  pinky-loop stop
+  pinky-loop status
+  pinky-loop once
+EOF
+}
+
+loop_once() {
+  if [[ -f "$STOP_FILE" ]]; then
+    echo "loop=stopped"
+    return 0
+  fi
+
+  tmp_output="$(mktemp)"
+  "$ROOT_DIR/bin/pinky-watch-once" > "$tmp_output" 2>&1 &
+  watch_pid="$!"
+
+  elapsed=0
+  while kill -0 "$watch_pid" >/dev/null 2>&1; do
+    if [[ "$elapsed" -ge 8 ]]; then
+      kill "$watch_pid" >/dev/null 2>&1 || true
+      sleep 0.2
+      if kill -0 "$watch_pid" >/dev/null 2>&1; then
+        kill -9 "$watch_pid" >/dev/null 2>&1 || true
+      fi
+      printf "%s signal=timeout\n" "$(date '+%Y-%m-%d %H:%M:%S')" >> "$LOG_FILE"
+      rm -f "$tmp_output"
+      echo "loop=watch-timeout"
+      return 0
+    fi
+    sleep 1
+    elapsed=$((elapsed + 1))
+  done
+
+  signal_output="$(cat "$tmp_output" || true)"
+  rm -f "$tmp_output"
+  signal="$(printf "%s\n" "$signal_output" | awk -F= '/^signal=/{print $2; exit}')"
+
+  case "$signal" in
+    none|pinky|brain|stop)
+      ;;
+    *)
+      echo "pinky-loop error: unknown signal: ${signal:-empty}" >&2
+      return 1
+      ;;
+  esac
+
+  printf "%s signal=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$signal" >> "$LOG_FILE"
+
+  case "$signal" in
+    brain)
+      echo "loop=brain-needed"
+      ;;
+    stop)
+      touch "$STOP_FILE"
+      "$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null
+      echo "loop=hard-stop"
+      ;;
+    pinky)
+      echo "loop=pinky-detected-no-autosend"
+      ;;
+    none)
+      echo "loop=watching"
+      ;;
+  esac
+}
+
+start_loop() {
+  "$ROOT_DIR/bin/pinky-loop" stop >/dev/null 2>&1 || true
+  rm -f "$STOP_FILE"
+
+  (
+    while [[ ! -f "$STOP_FILE" ]]; do
+      "$ROOT_DIR/bin/pinky-loop" once >> "$LOG_FILE" 2>&1 || true
+      sleep 2
+    done
+  ) &
+  pid="$!"
+  printf "%s\n" "$pid" > "$PID_FILE"
+
+  echo "Pinky loop started"
+  echo "pid=$pid"
+  echo "log=$LOG_FILE"
+}
+
+kill_pid() {
+  local pid="$1"
+  [[ -n "$pid" ]] || return 0
+  [[ "$pid" == "$$" ]] && return 0
+
+  if kill -0 "$pid" >/dev/null 2>&1; then
+    kill "$pid" >/dev/null 2>&1 || true
+    sleep 0.2
+    if kill -0 "$pid" >/dev/null 2>&1; then
+      kill -9 "$pid" >/dev/null 2>&1 || true
+    fi
+  fi
+}
+
+stop_loop() {
+  touch "$STOP_FILE"
+
+  if [[ -f "$PID_FILE" ]]; then
+    kill_pid "$(cat "$PID_FILE" || true)"
+    rm -f "$PID_FILE"
+  fi
+
+  while IFS= read -r pid; do
+    kill_pid "$pid"
+  done < <(
+    ps -axo pid=,command= |
+      awk -v root="$ROOT_DIR" '
+        $0 ~ root "/bin/pinky-loop once" {print $1}
+        $0 ~ root "/bin/pinky-watch-once" {print $1}
+        $0 ~ root "/bin/pinky-detect-signal" {print $1}
+        $0 ~ root "/bin/pinky-read-visible" {print $1}
+      '
+  )
+
+  echo "Pinky loop stopped"
+}
+
+status_loop() {
+  echo "--- loop pid ---"
+  if [[ -f "$PID_FILE" ]]; then
+    cat "$PID_FILE"
+  else
+    echo "none"
+  fi
+
+  echo "--- stop file ---"
+  if [[ -f "$STOP_FILE" ]]; then
+    echo "present"
+  else
+    echo "absent"
+  fi
+
+  echo "--- active loop processes ---"
+  ps -axo pid,command |
+    grep -F "$ROOT_DIR/bin/pinky-loop" |
+    grep -v grep |
+    grep -v "pinky-loop status" ||
+    echo "none"
+}
+
+case "${1:-}" in
+  start)
+    start_loop
+    ;;
+  stop)
+    stop_loop
+    ;;
+  status)
+    status_loop
+    ;;
+  once)
+    loop_once
+    ;;
+  help|--help|-h)
+    usage
+    ;;
+  "")
+    usage
+    exit 1
+    ;;
+  *)
+    echo "pinky-loop error: unknown command: $1" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

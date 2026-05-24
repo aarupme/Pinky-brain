@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+STOP_FILE="$RUN_DIR/pinky-loop.stop"
+
+mkdir -p "$RUN_DIR"
+
+touch "$STOP_FILE"
+"$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null 2>&1 || true
+"$ROOT_DIR/bin/pinky-loop" stop >/dev/null 2>&1 || true
+
+echo "Pinky kill switch activated"
+echo "automation=stopped"
