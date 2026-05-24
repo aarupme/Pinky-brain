@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  pinky-mode on
+  pinky-mode off
+  pinky-mode status
+  pinky-mode help
+EOF
+}
+
+case "${1:-}" in
+  on)
+    "$ROOT_DIR/bin/pinky-layout"
+    "$ROOT_DIR/bin/pinky-beacon-start"
+    "$ROOT_DIR/bin/pinky-send" --start
+    echo "Pinky Brain mode ON"
+    ;;
+  off)
+    "$ROOT_DIR/bin/pinky-send" --stop
+    "$ROOT_DIR/bin/pinky-beacon-stop"
+    echo "Pinky Brain mode OFF"
+    ;;
+  status)
+    "$ROOT_DIR/bin/pinky-beacon-status"
+    ;;
+  help|--help|-h)
+    usage
+    ;;
+  "")
+    usage
+    exit 1
+    ;;
+  *)
+    echo "pinky-mode error: unknown command: $1" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

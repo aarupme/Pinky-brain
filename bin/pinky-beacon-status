@@ -12,4 +12,10 @@ else
 fi
 
 echo "--- active pinky beacon processes ---"
-ps -axo pid,command | grep -F "$ROOT_DIR/bin/pinky-beacon" | grep -v grep || echo "none"
+ps -axo pid,command |
+  grep -F "$ROOT_DIR/bin/pinky-beacon" |
+  grep -v grep |
+  grep -v "pinky-beacon-status" |
+  grep -v "pinky-beacon-start" |
+  grep -v "pinky-beacon-stop" ||
+  echo "none"
