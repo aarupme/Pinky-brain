@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+START_PROMPT="$ROOT_DIR/prompts/runtime-start.txt"
+STOP_PROMPT="$ROOT_DIR/prompts/runtime-stop.txt"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  pinky-send --text "message"
+  pinky-send --file path/to/file.txt
+  pinky-send --start
+  pinky-send --stop
+  pinky-send --help
+EOF
+}
+
+fail() {
+  echo "pinky-send error: $1" >&2
+  exit 1
+}
+
+send_text() {
+  local message="$1"
+
+  [[ -n "$message" ]] || fail "message is empty"
+
+  osascript - "$message" <<'APPLESCRIPT'
+on run argv
+  set messageText to item 1 of argv
+
+  tell application "ChatGPT"
+    activate
+  end tell
+
+  delay 0.8
+
+  set oldClipboard to the clipboard
+  set the clipboard to messageText
+
+  tell application "System Events"
+    keystroke "v" using command down
+    delay 0.2
+    key code 36
+  end tell
+
+  delay 0.2
+  set the clipboard to oldClipboard
+end run
+APPLESCRIPT
+}
+
+send_file() {
+  local file_path="$1"
+
+  [[ -n "$file_path" ]] || fail "file path is empty"
+  [[ -f "$file_path" ]] || fail "file does not exist: $file_path"
+
+  local message
+  message="$(cat "$file_path")"
+  send_text "$message"
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 1
+fi
+
+case "${1:-}" in
+  --text)
+    [[ $# -eq 2 ]] || fail "--text requires exactly one message argument"
+    send_text "$2"
+    ;;
+  --file)
+    [[ $# -eq 2 ]] || fail "--file requires exactly one path argument"
+    send_file "$2"
+    ;;
+  --start)
+    [[ $# -eq 1 ]] || fail "--start does not accept extra arguments"
+    send_file "$START_PROMPT"
+    ;;
+  --stop)
+    [[ $# -eq 1 ]] || fail "--stop does not accept extra arguments"
+    send_file "$STOP_PROMPT"
+    ;;
+  --help|-h)
+    usage
+    ;;
+  *)
+    fail "unknown argument: $1"
+    ;;
+esac
