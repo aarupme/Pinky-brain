@@ -175,12 +175,18 @@ stop_loop() {
 }
 
 status_loop() {
-  echo "--- loop pid ---"
+  tracked_pid="none"
+
   if [[ -f "$PID_FILE" ]]; then
-    cat "$PID_FILE"
-  else
-    echo "none"
+    tracked_pid="$(cat "$PID_FILE" || true)"
+    if [[ -z "${tracked_pid:-}" ]] || ! kill -0 "$tracked_pid" >/dev/null 2>&1; then
+      rm -f "$PID_FILE"
+      tracked_pid="none"
+    fi
   fi
+
+  echo "--- loop pid ---"
+  echo "$tracked_pid"
 
   echo "--- stop file ---"
   if [[ -f "$STOP_FILE" ]]; then
