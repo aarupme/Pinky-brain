@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+LOG_DIR="$ROOT_DIR/logs"
+PID_FILE="$RUN_DIR/pinky-beacon.pid"
+LOG_FILE="$LOG_DIR/pinky-beacon.log"
+
+mkdir -p "$RUN_DIR" "$LOG_DIR"
+
+"$ROOT_DIR/bin/pinky-beacon-stop" >/dev/null 2>&1 || true
+
+nohup env TK_SILENCE_DEPRECATION=1 "$ROOT_DIR/bin/pinky-beacon" >"$LOG_FILE" 2>&1 &
+PID="$!"
+
+echo "$PID" > "$PID_FILE"
+
+sleep 0.5
+
+if kill -0 "$PID" >/dev/null 2>&1; then
+  echo "Pinky beacon started"
+  echo "pid=$PID"
+  echo "log=$LOG_FILE"
+else
+  echo "pinky-beacon-start error: beacon failed to start" >&2
+  cat "$LOG_FILE" >&2 || true
+  exit 1
+fi

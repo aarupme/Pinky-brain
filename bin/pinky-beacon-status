@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PID_FILE="$ROOT_DIR/.run/pinky-beacon.pid"
+
+echo "--- tracked pid ---"
+if [[ -f "$PID_FILE" ]]; then
+  cat "$PID_FILE"
+else
+  echo "none"
+fi
+
+echo "--- active pinky beacon processes ---"
+ps -axo pid,command | grep -F "$ROOT_DIR/bin/pinky-beacon" | grep -v grep || echo "none"
