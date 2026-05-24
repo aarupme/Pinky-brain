@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+STATE_DIR="$ROOT_DIR/.run"
+BEACON_STATE_FILE="$STATE_DIR/pinky-beacon.state"
+
+mkdir -p "$STATE_DIR"
+
+usage() {
+  cat <<'EOF'
+Usage:
+  pinky-set-state idle
+  pinky-set-state pinky
+  pinky-set-state brain
+  pinky-set-state paused
+  pinky-set-state stopped
+EOF
+}
+
+state="${1:-}"
+
+case "$state" in
+  idle|pinky|brain|paused|stopped)
+    printf "%s\n" "$state" > "$BEACON_STATE_FILE"
+    echo "beacon_state=$state"
+    ;;
+  ""|help|--help|-h)
+    usage
+    [[ -n "$state" ]] || exit 1
+    ;;
+  *)
+    echo "pinky-set-state error: unknown state: $state" >&2
+    usage >&2
+    exit 1
+    ;;
+esac

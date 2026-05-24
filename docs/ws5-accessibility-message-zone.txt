@@ -1,0 +1,61 @@
+index=130 | role=AXList | subrole=AXCollectionList | name=missing value | value=missing value | pos=258-19234 | size=76820136
+index=131 | role=AXList | subrole=AXSectionList | name=missing value | value=missing value | pos=258-19222 | size=76820084
+index=132 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-2340 | size=768449
+index=133 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-2340 | size=768449
+index=134 | role=AXStaticText | subrole=missing value | name=Looked at Terminal | value=Looked at Terminal | pos=274-2340 | size=12217
+index=135 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=274-2307 | size=736162
+index=136 | role=AXHeading | subrole=missing value | name=missing value | value=missing value | pos=290-2114 | size=70417
+index=137 | role=AXScrollArea | subrole=missing value | name=missing value | value=missing value | pos=274-2087 | size=736163
+index=138 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=290-2071 | size=531147
+index=139 | role=AXScrollBar | subrole=missing value | name=missing value | value=0.0 | pos=289-1942 | size=70619
+index=140 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-1891 | size=76891
+index=141 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-1891 | size=76891
+index=142 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=961-1824 | size=428
+index=143 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-1800 | size=768962
+index=144 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-1800 | size=768962
+index=145 | role=AXStaticText | subrole=missing value | name=Looked at Terminal | value=Looked at Terminal | pos=274-1770 | size=12217
+index=146 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=274-1737 | size=736165
+index=147 | role=AXHeading | subrole=missing value | name=missing value | value=missing value | pos=290-1540 | size=70417
+index=148 | role=AXScrollArea | subrole=missing value | name=missing value | value=missing value | pos=274-1514 | size=736643
+index=149 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=290-1498 | size=1158627
+index=150 | role=AXScrollBar | subrole=missing value | name=missing value | value=0.0 | pos=289-889 | size=70619
+index=151 | role=AXValueIndicator | subrole=missing value | name=missing value | value=0.0 | pos=293-880 | size=4316
+index=152 | role=AXButton | subrole=AXIncrementArrow | name=missing value | value=missing value | pos=290-888 | size=00
+index=153 | role=AXButton | subrole=AXDecrementArrow | name=missing value | value=missing value | pos=290-888 | size=00
+index=154 | role=AXButton | subrole=AXIncrementPage | name=missing value | value=missing value | pos=725-880 | size=2666
+index=155 | role=AXButton | subrole=AXDecrementPage | name=missing value | value=missing value | pos=293-880 | size=06
+index=156 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-838 | size=76891
+index=157 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-838 | size=76891
+index=158 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=961-770 | size=428
+index=159 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-746 | size=768106
+index=160 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-746 | size=768106
+index=161 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=274-716 | size=16226
+index=162 | role=AXStaticText | subrole=missing value | name=Looked at Terminal | value=Looked at Terminal | pos=274-674 | size=12217
+index=163 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-640 | size=768242
+index=164 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-640 | size=768242
+index=165 | role=AXStaticText | subrole=missing value | name=Looked at Terminal | value=Looked at Terminal | pos=274-640 | size=12217
+index=166 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=274-607 | size=73683
+index=167 | role=AXHeading | subrole=missing value | name=missing value | value=missing value | pos=290-493 | size=70417
+index=168 | role=AXScrollArea | subrole=missing value | name=missing value | value=missing value | pos=274-466 | size=73635
+index=169 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=290-450 | size=172919
+index=170 | role=AXScrollBar | subrole=missing value | name=missing value | value=0.0 | pos=289-449 | size=70619
+index=171 | role=AXValueIndicator | subrole=missing value | name=missing value | value=0.0 | pos=293-440 | size=2916
+index=172 | role=AXButton | subrole=AXIncrementArrow | name=missing value | value=missing value | pos=290-448 | size=00
+index=173 | role=AXButton | subrole=AXDecrementArrow | name=missing value | value=missing value | pos=290-448 | size=00
+index=174 | role=AXButton | subrole=AXIncrementPage | name=missing value | value=missing value | pos=585-440 | size=4066
+index=175 | role=AXButton | subrole=AXDecrementPage | name=missing value | value=missing value | pos=293-440 | size=06
+index=176 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-398 | size=76891
+index=177 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-398 | size=76891
+index=178 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=961-331 | size=428
+index=179 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-307 | size=768106
+index=180 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-307 | size=768106
+index=181 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=274-277 | size=16226
+index=182 | role=AXStaticText | subrole=missing value | name=Looked at Terminal | value=Looked at Terminal | pos=274-235 | size=12217
+index=183 | role=AXGroup | subrole=missing value | name=missing value | value=missing value | pos=258-201 | size=7681063
+index=184 | role=AXGroup | subrole=AXHostingView | name=missing value | value=missing value | pos=258-201 | size=7681063
+index=185 | role=AXStaticText | subrole=missing value | name=Looked at Terminal | value=Looked at Terminal | pos=274-201 | size=12217
+index=186 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=274-168 | size=736184
+index=187 | role=AXHeading | subrole=missing value | name=missing value | value=missing value | pos=29047 | size=70417
+index=188 | role=AXScrollArea | subrole=missing value | name=missing value | value=missing value | pos=27474 | size=736755
+index=189 | role=AXStaticText | subrole=missing value | name=missing value | value=missing value | pos=29090 | size=1495739
+index=190 | role=AXScrollBar | subrole=missing value | name=missing value | value=0.0 | pos=289811 | size=70619

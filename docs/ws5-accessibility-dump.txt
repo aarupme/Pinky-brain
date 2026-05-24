@@ -1,0 +1,1 @@
+docs/ws5-accessibility-dump.applescript:742:750: script error: Expected end of line but found identifier. (-2741)

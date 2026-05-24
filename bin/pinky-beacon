@@ -62,6 +62,7 @@ class PinkyBeacon:
         self.state_index = 0
         self.current_state_key = None
         self.sound_brain_path = os.path.join(os.path.dirname(__file__), "pinky-sound-brain")
+        self.beacon_state_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".run", "pinky-beacon.state")
 
         self.root.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}")
         self.root.configure(bg="#000001")
@@ -98,6 +99,7 @@ class PinkyBeacon:
         self.root.bind("5", lambda _event: self.set_state("stopped"))
 
         self.set_state("idle")
+        self._poll_state_file()
         self.root.deiconify()
         self.root.lift()
 
@@ -169,6 +171,9 @@ class PinkyBeacon:
         )
 
     def set_state(self, state_key: str) -> None:
+        if state_key not in STATES:
+            return
+
         previous_state_key = self.current_state_key
         self.current_state_key = state_key
         self.state_index = STATE_ORDER.index(state_key)
@@ -176,6 +181,18 @@ class PinkyBeacon:
 
         if state_key == "brain" and previous_state_key != "brain":
             self._play_brain_sound()
+
+    def _poll_state_file(self) -> None:
+        try:
+            with open(self.beacon_state_file, "r", encoding="utf-8") as file:
+                requested_state = file.read().strip()
+        except OSError:
+            requested_state = ""
+
+        if requested_state in STATES and requested_state != self.current_state_key:
+            self.set_state(requested_state)
+
+        self.root.after(500, self._poll_state_file)
 
     def _play_brain_sound(self) -> None:
         try:

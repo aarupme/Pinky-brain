@@ -1,0 +1,226 @@
+role=AXGroup | name=missing value | value=missing value
+role=AXSplitGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXTextField | name=missing value | value=missing value
+role=AXScrollArea | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXHeading | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXHeading | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXHeading | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXScrollBar | name=missing value | value=0.016599276442
+role=AXValueIndicator | name=missing value | value=0.016599276442
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXMenuButton | name=missing value | value=missing value
+role=AXSplitter | name=missing value | value=258.0
+role=AXGroup | name=missing value | value=missing value
+role=AXScrollArea | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXList | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXStaticText | name=Looked at Terminal | value=Looked at Terminal
+role=AXStaticText | name=Looked at Terminal | value=Looked at Terminal
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXStaticText | name=Looked at Terminal | value=Looked at Terminal
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXStaticText | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXStaticText | name=missing value | value=missing value
+role=AXStaticText | name=Looked at Terminal | value=Looked at Terminal
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXStaticText | name=Looked at Terminal | value=Looked at Terminal
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXStaticText | name=missing value | value=missing value
+role= | name= | value=
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role= | name= | value=
+role= | name=Looked at Terminal | value=Looked at Terminal
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role= | name= | value=
+role=AXScrollBar | name=missing value | value=0.999492881322
+role=AXValueIndicator | name=missing value | value=0.999492881322
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXScrollArea | name=missing value | value=missing value
+role=AXScrollArea | name=missing value | value=missing value
+role=AXTextArea | name=missing value | value=
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role= | name= | value=
+role=AXToolbar | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXGroup | name=missing value | value=missing value
+role=AXButton | name=missing value | value=missing value

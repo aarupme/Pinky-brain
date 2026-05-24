@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TMP_FILE="$(mktemp)"
+SIGNAL_FILE="$(mktemp)"
+trap 'rm -f "$TMP_FILE" "$SIGNAL_FILE"' EXIT
+
+"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1 || {
+  echo "pinky-detect-signal error: failed to read visible ChatGPT text" >&2
+  exit 1
+}
+
+tail -60 "$TMP_FILE" | while IFS= read -r line; do
+  cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+
+  case "$cleaned" in
+    "🐭") echo "pinky" ;;
+    "🧠"|"<0001f9e0>") echo "brain" ;;
+    "🛑") echo "stop" ;;
+  esac
+done | tail -1 > "$SIGNAL_FILE"
+
+if [[ -s "$SIGNAL_FILE" ]]; then
+  echo "signal=$(cat "$SIGNAL_FILE")"
+else
+  echo "signal=none"
+fi

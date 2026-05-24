@@ -1,0 +1,155 @@
+text
+pinky-read-visible is working: it can read ChatGPT-visible text via AXDescription.
+
+Next, turn that into a signal probe that extracts only runtime signals from the visible text and reports the latest detected signal:
+cd ~/Desktop/pinky-brain && python3 - <<'PY'
+
+from pathlib import Path
+
+script = r'''#!/usr/bin/env bash
+
+set -euo pipefail
+
+TMP_FILE="$(mktemp)"
+
+trap 'rm -f "$TMP_FILE"' EXIT
+
+"$PWD/bin/pinky-read-visible" 2>&1 > "$TMP_FILE" || {
+
+  echo "pinky-detect-signal error: failed to read visible ChatGPT text" >&2
+
+  exit 1
+
+}
+
+if grep -q "🛑" "$TMP_FILE"; then
+
+  echo "signal=stop"
+
+  exit 0
+
+fi
+
+if grep -q "🧠" "$TMP_FILE"; then
+
+  echo "signal=brain"
+
+  exit 0
+
+fi
+
+if grep -q "🐭" "$TMP_FILE"; then
+
+  echo "signal=pinky"
+
+  exit 0
+
+fi
+
+echo "signal=none"
+
+'''
+
+path = Path("bin/pinky-detect-signal")
+
+path.write_text(script, encoding="utf-8")
+
+path.chmod(0o755)
+
+print("created bin/pinky-detect-signal")
+
+PY
+
+./bin/pinky-detect-signal
+l
+text
+pinky-detect-signal works and currently reports signal=none, which is expected because the latest visible text has no runtime signal.
+
+Now test a visible 🧠 signal path without auto-send. I’ll output a Brain signal here, then you run the detector.
+
+🧠
+cd ~/Desktop/pinky-brain && ./bin/pinky-detect-signal
+l
+Thought for a couple of seconds
+text
+text
+The detector returned signal=none, so the 🧠 I printed is not being exposed in the current visible AXDescription set. We need inspect what the reader actually sees right now.
+
+Run:
+cd ~/Desktop/pinky-brain && ./bin/pinky-read-visible 2>&1 | tee docs/ws5-visible-after-brain-test.txt | tail -120
+l
+Thought for 9s
+text
+text
+We found the bug: pinky-detect-signal was not actually capturing osascript log output because the redirection order was wrong.
+
+Patch it so it captures both stdout/stderr, then chooses the latest visible signal by line order:
+cd ~/Desktop/pinky-brain && python3 - <<'PY'
+
+from pathlib import Path
+
+script = r'''#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+TMP_FILE="$(mktemp)"
+
+trap 'rm -f "$TMP_FILE"' EXIT
+
+"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1 || {
+
+  echo "pinky-detect-signal error: failed to read visible ChatGPT text" >&2
+
+  exit 1
+
+}
+
+latest="none"
+
+while IFS= read -r line; do
+
+  case "$line" in
+
+    *"🐭"*) latest="pinky" ;;
+
+  esac
+
+  case "$line" in
+
+    *"🧠"*) latest="brain" ;;
+
+  esac
+
+  case "$line" in
+
+    *"🛑"*) latest="stop" ;;
+
+  esac
+
+done < "$TMP_FILE"
+
+echo "signal=$latest"
+
+'''
+
+path = Path("bin/pinky-detect-signal")
+
+path.write_text(script, encoding="utf-8")
+
+path.chmod(0o755)
+
+print("patched bin/pinky-detect-signal capture/order logic")
+
+PY
+
+./bin/pinky-detect-signal
+l
+Thought for a couple of seconds
+text
+text
+Detector is now technically reading signals, but it returned signal=stop because it is scanning all visible text, including older runtime prompt content that contains 🛑. WS5 needs to detect the latest assistant response area, not any historical visible signal.
+
+Next, inspect signal-bearing visible lines with line numbers so we can design the filter correctly:
+cd ~/Desktop/pinky-brain && ./bin/pinky-read-visible > docs/ws5-visible-current.txt 2>&1 && nl -ba docs/ws5-visible-current.txt | grep "🐭\|🧠\|🛑\|<0001f9e0>" | tail -80

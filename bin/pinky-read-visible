@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+osascript <<'APPLESCRIPT'
+tell application "System Events"
+  tell process "ChatGPT"
+    set allItems to entire contents of window 1
+    repeat with itemRef in allItems
+      set roleText to ""
+      set descText to ""
+
+      try
+        set roleText to role of itemRef as text
+      end try
+
+      try
+        set descText to description of itemRef as text
+      end try
+
+      if roleText is "AXStaticText" and descText is not "" and descText is not "missing value" then
+        if length of descText > 1600 then set descText to text 1 thru 1600 of descText
+        log descText
+      end if
+    end repeat
+  end tell
+end tell
+APPLESCRIPT
