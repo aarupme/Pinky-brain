@@ -21,9 +21,9 @@ case "${1:-}" in
     echo "Pinky Brain mode ON"
     ;;
   off)
-    "$ROOT_DIR/bin/pinky-send" --stop
     "$ROOT_DIR/bin/pinky-kill"
     "$ROOT_DIR/bin/pinky-beacon-stop"
+    "$ROOT_DIR/bin/pinky-send" --stop
     echo "Pinky Brain mode OFF"
     ;;
   status)
