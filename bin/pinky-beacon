@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+import os
 import tkinter as tk
 from dataclasses import dataclass
+
+os.environ["TK_SILENCE_DEPRECATION"] = "1"
 
 
 @dataclass(frozen=True)
@@ -26,19 +29,41 @@ STATE_ORDER = ["idle", "pinky", "brain", "paused", "stopped"]
 
 class PinkyBeacon:
     def __init__(self) -> None:
-        self.width = 260
-        self.height = 92
-        self.radius = 30
-        self.state_index = 0
-
         self.root = tk.Tk()
         self.root.withdraw()
-        self.root.title("")
+        self.root.title("Pinky Brain")
         self.root.resizable(False, False)
-        self.root.configure(bg="#000001")
 
+        self.screen_width = self.root.winfo_screenwidth()
+        self.screen_height = self.root.winfo_screenheight()
+
+        self.outer_gap = 10
+        self.column_gap = 14
+        self.row_gap = 28
+        self.menu_safe_top = 36
+        self.dock_safe_bottom = 78
+
+        self.chat_width = int(self.screen_width * 0.6) - self.outer_gap
+        self.right_left = self.chat_width + self.column_gap
+        self.right_width = self.screen_width - self.right_left - self.outer_gap
+
+        self.usable_top = self.menu_safe_top
+        self.usable_bottom = self.screen_height - self.dock_safe_bottom
+        self.usable_height = self.usable_bottom - self.usable_top
+
+        self.terminal_height = int(self.usable_height * 0.42)
+
+        self.width = self.right_width
+        self.height = int(self.usable_height * 0.38)
+        self.x = self.right_left
+        self.y = self.usable_top + self.terminal_height + self.row_gap
+
+        self.state_index = 0
+
+        self.root.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}")
+        self.root.configure(bg="#000001")
         self.root.overrideredirect(True)
-        self.root.geometry(self._top_center_geometry(self.width, self.height))
+        self.root.attributes("-topmost", False)
 
         try:
             self.root.attributes("-transparentcolor", "#000001")
@@ -46,11 +71,9 @@ class PinkyBeacon:
             pass
 
         try:
-            self.root.attributes("-alpha", 0.97)
+            self.root.attributes("-alpha", 0.94)
         except tk.TclError:
             pass
-
-        self.root.attributes("-topmost", True)
 
         self.canvas = tk.Canvas(
             self.root,
@@ -72,124 +95,79 @@ class PinkyBeacon:
         self.root.bind("5", lambda _event: self.set_state("stopped"))
 
         self.set_state("idle")
-
         self.root.deiconify()
         self.root.lift()
-        self.root.after(100, self._force_frameless)
-        self._keep_above()
 
-    def _force_frameless(self) -> None:
-        try:
-            self.root.overrideredirect(True)
-            self.root.attributes("-topmost", True)
-            self.root.lift()
-        except tk.TclError:
-            pass
-
-    def _keep_above(self) -> None:
-        try:
-            self.root.attributes("-topmost", True)
-            self.root.lift()
-        except tk.TclError:
-            return
-        self.root.after(500, self._keep_above)
-
-    def _top_center_geometry(self, width: int, height: int) -> str:
-        screen_width = self.root.winfo_screenwidth()
-        x = int((screen_width - width) / 2)
-        y = 0
-        return f"{width}x{height}+{x}+{y}"
-
-    def _draw_halfmoon(self, state: BeaconState) -> None:
+    def _draw_panel(self, state: BeaconState) -> None:
         self.canvas.delete("all")
 
         w = self.width
         h = self.height
-        r = self.radius
-        bottom = h - 6
+        margin = 18
 
-        self.canvas.create_oval(
-            24,
-            12,
-            w - 24,
-            bottom + 22,
+        self.canvas.create_rectangle(
+            margin + 8,
+            margin + 8,
+            w - margin + 8,
+            h - margin + 8,
             fill=state.glow,
             outline="",
         )
 
         self.canvas.create_rectangle(
-            0,
-            0,
-            w,
-            bottom - r,
+            margin,
+            margin,
+            w - margin,
+            h - margin,
             fill=state.surface,
-            outline="",
-        )
-        self.canvas.create_rectangle(
-            r,
-            0,
-            w - r,
-            bottom,
-            fill=state.surface,
-            outline="",
-        )
-        self.canvas.create_arc(
-            0,
-            bottom - (2 * r),
-            2 * r,
-            bottom,
-            start=180,
-            extent=90,
-            fill=state.surface,
-            outline="",
-        )
-        self.canvas.create_arc(
-            w - (2 * r),
-            bottom - (2 * r),
-            w,
-            bottom,
-            start=270,
-            extent=90,
-            fill=state.surface,
-            outline="",
-        )
-        self.canvas.create_rectangle(
-            r,
-            bottom - r,
-            w - r,
-            bottom,
-            fill=state.surface,
-            outline="",
+            outline=state.glow,
+            width=3,
         )
 
         self.canvas.create_text(
-            78,
-            47,
+            w / 2,
+            h * 0.28,
             text=state.icon,
             fill=state.text,
-            font=("Apple Color Emoji", 34),
+            font=("Apple Color Emoji", 78),
         )
 
         self.canvas.create_text(
-            164,
-            43,
+            w / 2,
+            h * 0.54,
             text=state.label,
             fill=state.text,
-            font=("Helvetica Neue", 16, "bold"),
+            font=("Helvetica Neue", 28, "bold"),
+        )
+
+        self.canvas.create_text(
+            w / 2,
+            h * 0.68,
+            text="Pinky Brain Workspace",
+            fill=state.text,
+            font=("Helvetica Neue", 15),
+        )
+
+        self.canvas.create_text(
+            w / 2,
+            h * 0.81,
+            text="Click cycles states · Esc closes",
+            fill=state.text,
+            font=("Helvetica Neue", 12),
         )
 
         self.canvas.create_oval(
-            w - 28,
-            14,
-            w - 16,
-            26,
+            w - margin - 26,
+            margin + 18,
+            w - margin - 8,
+            margin + 36,
             fill=state.glow,
             outline="",
         )
 
     def set_state(self, state_key: str) -> None:
         self.state_index = STATE_ORDER.index(state_key)
-        self._draw_halfmoon(STATES[state_key])
+        self._draw_panel(STATES[state_key])
 
     def next_state(self) -> None:
         self.state_index = (self.state_index + 1) % len(STATE_ORDER)
