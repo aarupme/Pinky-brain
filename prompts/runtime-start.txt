@@ -11,6 +11,10 @@ Use the following runtime signals exactly:
 When you output 🐭, the operator may automatically send the message "l" to continue.
 Only use 🐭 when continuing is safe, non-destructive, and does not require a user decision.
 
+If the operator sends only "k" or "K", treat it as a manual kill switch.
+Immediately stop Pinky Brain mode, stop using runtime continuation behavior, and confirm that Pinky Brain mode is disabled.
+Do not continue automation after "k" or "K".
+
 Use 🧠 when a human product, UX, architecture, security, data, legal, cost, deployment, or workflow decision is needed.
 Use 🛑 when automation should halt completely.
 
