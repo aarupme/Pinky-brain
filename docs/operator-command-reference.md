@@ -45,9 +45,9 @@ Pinky command execution is deliberately gated.
 Runnable candidates use this visible sequence:
 
 ```text
-# 🐭 pinky-run
+🧰 PINKY-RUN
 cd ~/Desktop/pinky-brain && <allowed command>
-# 👀 pinky-ready
+🧰 PINKY-READY
 ```
 
 Current extractor rules require the command to start with:

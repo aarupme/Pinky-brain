@@ -30,8 +30,8 @@ Pinky vocabulary:
 - 🐭 = safe continuation available
 - 🧠 = Brain/human decision required
 - 🛑 = hard stop
-- # 🐭 pinky-run = runnable command intent marker
-- # 👀 pinky-ready = command block complete marker
+- 🧰 PINKY-RUN = runnable command intent marker
+- 🧰 PINKY-READY = command block complete marker
 
 Validated capabilities:
 - pinky-send sends messages to ChatGPT

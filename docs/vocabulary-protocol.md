@@ -21,8 +21,8 @@ Status: ACTIVE
 
 ## Runnable command markers
 
-- # 🐭 pinky-run = command block is intended for Pinky
-- # 👀 pinky-ready = command block is complete and ready to extract
+- 🧰 PINKY-RUN = command block is intended for Pinky
+- 🧰 PINKY-READY = command block is complete and ready to extract
 
 ## Rule
 
