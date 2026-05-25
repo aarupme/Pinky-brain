@@ -12,7 +12,7 @@ Current clean checkpoint:
 - beacon is stopped
 - command candidate is cleared
 - dry-run returns no-candidate
-- latest commit: bb863ab Normalize quotes in Pinky command extraction
+- latest commit: 7f29da1 Update Pinky Brain handoff for reliability polish
 
 Hard workflow rules:
 - l means: lets go and look; wait briefly, inspect terminal state, report success/failure/in-progress, then give next single safe command only if needed
@@ -64,7 +64,7 @@ Completed WS14-WS18 runtime proof:
 - command execution sends PINKY-DONE back to chat.
 - quote normalization protects copied command text.
 - signal detection is scoped to the latest response block.
-- repo is clean and synced at bb863ab.
+- repo is clean and synced at 7f29da1.
 
 Goal:
 Polish reliability only where needed: make runtime status clearer, reduce false trigger risk, improve completion callback clarity, and keep all command execution visible in Terminal. Avoid architecture expansion until the current runtime remains stable across repeated sessions.
