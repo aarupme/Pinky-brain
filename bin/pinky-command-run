@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CANDIDATE_FILE="$ROOT_DIR/.run/pinky-command.candidate"
+LOG_FILE="$ROOT_DIR/logs/pinky-command-run.log"
+mkdir -p "$ROOT_DIR/logs"
+classification_output="$("$ROOT_DIR/bin/pinky-command-classify")"
+classification="$(printf "%s\n" "$classification_output" | awk -F= "/^classification=/{print \$2; exit}")"
+reason="$(printf "%s\n" "$classification_output" | awk -F= "/^reason=/{print \$2; exit}")"
+if [[ "${classification:-none}" != "safe" ]]; then
+  echo "executed=false"
+  echo "classification=${classification:-none}"
+  echo "reason=${reason:-not-safe}"
+  exit 1
+fi
+if [[ ! -s "$CANDIDATE_FILE" ]]; then
+  echo "executed=false"
+  echo "classification=none"
+  echo "reason=no-candidate"
+  exit 1
+fi
+command_text="$(cat "$CANDIDATE_FILE")"
+printf "%s executing=%s reason=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$command_text" >> "$LOG_FILE"
+bash -lc "$command_text"
+echo "executed=true"
+echo "classification=safe"
+echo "reason=${reason:-safe}"
