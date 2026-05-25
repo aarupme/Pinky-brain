@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TMP_FILE="$(mktemp)"
+trap 'rm -f "$TMP_FILE"' EXIT
+"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1 || {
+  echo "pinky-command-detect error: failed to read visible ChatGPT text" >&2
+  exit 1
+}
+if grep -Fq "# 🐭 pinky-run" "$TMP_FILE"; then
+  echo "pinky_runnable=present"
+else
+  echo "pinky_runnable=none"
+fi
