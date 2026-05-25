@@ -107,11 +107,11 @@ loop_once() {
         return 0
       fi
 
-      "$ROOT_DIR/bin/pinky-send" --text "l"
+      "$ROOT_DIR/bin/pinky-send" --text "Narf!"
       printf "%s\n" "$hash" > "$LAST_HASH_FILE"
       mark_sent
-      printf "%s autosend=l hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$hash" >> "$LOG_FILE"
-      echo "loop=pinky-autosent-l"
+      printf "%s autosend=Narf hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$hash" >> "$LOG_FILE"
+      echo "loop=pinky-autosent-narf"
       ;;
     none)
       echo "loop=watching"

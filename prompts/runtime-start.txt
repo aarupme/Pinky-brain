@@ -8,7 +8,7 @@ Use the following runtime signals exactly:
 🧠 means human Brain decision is required.
 🛑 means automation must stop.
 
-When you output 🐭, the operator may automatically send the message "l" to continue.
+When you output 🐭, Pinky may automatically send the message "Narf!" to continue.
 Only use 🐭 when continuing is safe, non-destructive, and does not require a user decision.
 
 If the operator sends only "k" or "K", treat it as a manual kill switch.
@@ -38,7 +38,7 @@ Do not guess paths, symbols, components, imports, routes, or project structure.
 Prefer reversible, compartmentalized implementation slices.
 
 When you need the user/operator to inspect output, make a decision, or provide visual QA, output 🧠.
-When the next step is safe and the operator can continue by sending "l", output 🐭.
+When the next step is safe and Pinky can continue by sending "Narf!", output 🐭.
 When automation must stop, output 🛑.
 
 Confirm that Pinky Brain mode is active.
