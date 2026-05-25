@@ -10,6 +10,7 @@ mkdir -p "$RUN_DIR"
 touch "$STOP_FILE"
 "$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null 2>&1 || true
 "$ROOT_DIR/bin/pinky-loop" stop >/dev/null 2>&1 || true
+"$ROOT_DIR/bin/pinky-beacon-stop" >/dev/null 2>&1 || true
 
 echo "Pinky kill switch activated"
 echo "automation=stopped"
