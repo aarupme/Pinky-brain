@@ -17,26 +17,23 @@ if [[ "$read_status" -ne 0 ]]; then
   exit 1
 fi
 
-last_line=""
+latest_signal=""
+latest_line_no=""
+line_no=0
 while IFS= read -r line; do
+  line_no=$((line_no + 1))
   cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
-  if [[ -n "$cleaned" ]]; then
-    last_line="$cleaned"
-  fi
+  case "$cleaned" in
+    "🐭") latest_signal="pinky"; latest_line_no="$line_no" ;;
+    "🧠"|"<0001f9e0>") latest_signal="brain"; latest_line_no="$line_no" ;;
+    "🛑") latest_signal="stop"; latest_line_no="$line_no" ;;
+  esac
 done < "$TMP_FILE"
 
-case "$last_line" in
-  "🐭")
-    printf "%s\n" "pinky" > "$SIGNAL_FILE"
-    printf "%s\n" "$last_line" > "$CONTEXT_FILE"
-    ;;
-  "🧠"|"<0001f9e0>")
-    printf "%s\n" "brain" > "$SIGNAL_FILE"
-    printf "%s\n" "$last_line" > "$CONTEXT_FILE"
-    ;;
-  "🛑")
-    printf "%s\n" "stop" > "$SIGNAL_FILE"
-    printf "%s\n" "$last_line" > "$CONTEXT_FILE"
+case "$latest_signal" in
+  pinky|brain|stop)
+    printf "%s\n" "$latest_signal" > "$SIGNAL_FILE"
+    printf "%s:%s\n" "$latest_signal" "$latest_line_no" > "$CONTEXT_FILE"
     ;;
 esac
 
