@@ -31,6 +31,7 @@ exit_code="$?"
 set -e
 printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$candidate_hash" "$exit_code" "$output_file" "$command_text" >> "$LOG_FILE"
 printf "%s\n" "$candidate_hash" > "$LAST_HASH_FILE"
+rm -f "$CANDIDATE_FILE"
 cat "$output_file"
 echo "executed=true"
 echo "classification=safe"
