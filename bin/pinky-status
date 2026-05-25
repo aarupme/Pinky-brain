@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+LOG_DIR="$ROOT_DIR/logs"
+LOOP_PID="$RUN_DIR/pinky-loop.pid"
+LOOP_STOP="$RUN_DIR/pinky-loop.stop"
+LOOP_LAST_HASH="$RUN_DIR/pinky-loop.last-hash"
+LOOP_LAST_SEND="$RUN_DIR/pinky-loop.last-send"
+BEACON_PID="$RUN_DIR/pinky-beacon.pid"
+COMMAND_CANDIDATE="$RUN_DIR/pinky-command.candidate"
+
+read_oneline() {
+  local path="$1"
+  if [[ -s "$path" ]]; then
+    head -n 1 "$path" | tr '\n' ' '
+    printf '\n'
+  else
+    printf 'none\n'
+  fi
+}
+
+pid_status() {
+  local label="$1"
+  local pid_file="$2"
+  local pid="none"
+  local state="stopped"
+  if [[ -s "$pid_file" ]]; then
+    pid="$(cat "$pid_file" 2>/dev/null || true)"
+    if [[ -n "$pid" ]] && kill -0 "$pid" >/dev/null 2>&1; then
+      state="running"
+    else
+      state="stale-pid"
+    fi
+  fi
+  printf '%s=%s pid=%s\n' "$label" "$state" "$pid"
+}
+
+log_tail() {
+  local label="$1"
+  local path="$2"
+  printf '%s\n' "--- $label ---"
+  if [[ -s "$path" ]]; then
+    tail -n 8 "$path"
+  else
+    printf 'none\n'
+  fi
+}
+
+printf '== Pinky Status ==\n'
+printf 'root=%s\n\n' "$ROOT_DIR"
+
+printf '%s\n' '--- git ---'
+if [[ -n "$(git -C "$ROOT_DIR" status --short 2>/dev/null)" ]]; then
+  printf 'git=dirty\n'
+  git -C "$ROOT_DIR" status --short | sed -n '1,40p'
+else
+  printf 'git=clean\n'
+fi
+
+printf '\n%s\n' '--- runtime ---'
+pid_status "loop" "$LOOP_PID"
+pid_status "beacon" "$BEACON_PID"
+if [[ -e "$LOOP_STOP" ]]; then
+  printf 'loop-stop=present\n'
+else
+  printf 'loop-stop=absent\n\n'
+fi
+
+printf '%s\n' '--- signal ---'
+printf 'last-hash='
+read_oneline "$LOOP_LAST_HASH"
+printf 'last-send='
+read_oneline "$LOOP_LAST_SEND"
+
+printf '\n%s\n' '--- command ---'
+if [[ -s "$COMMAND_CANDIDATE" ]]; then
+  printf 'candidate=present\n  '
+  head -n 1 "$COMMAND_CANDIDATE"
+  printf '\n'
+  "$ROOT_DIR/bin/pinky-command-dry-run" | sed -n '1,40p'
+else
+  printf 'candidate=none\ndry-run=none\n'
+fi
+
+printf '\n%s\n' '--- recent logs ---'
+log_tail "pinky-loop.log" "$LOG_DIR/pinky-loop.log"
+log_tail "pinky-signal.log" "$LOG_DIR/pinky-signal.log"
+log_tail "pinky-command-run.log" "$LOG_DIR/pinky-command-run.log"
