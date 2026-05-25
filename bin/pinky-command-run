@@ -3,7 +3,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CANDIDATE_FILE="$ROOT_DIR/.run/pinky-command.candidate"
 LOG_FILE="$ROOT_DIR/logs/pinky-command-run.log"
-mkdir -p "$ROOT_DIR/logs"
+OUTPUT_DIR="$ROOT_DIR/logs/command-runs"
+mkdir -p "$ROOT_DIR/logs" "$OUTPUT_DIR"
 classification_output="$("$ROOT_DIR/bin/pinky-command-classify")"
 classification="$(printf "%s\n" "$classification_output" | awk -F= "/^classification=/{print \$2; exit}")"
 reason="$(printf "%s\n" "$classification_output" | awk -F= "/^reason=/{print \$2; exit}")"
@@ -20,8 +21,18 @@ if [[ ! -s "$CANDIDATE_FILE" ]]; then
   exit 1
 fi
 command_text="$(cat "$CANDIDATE_FILE")"
-printf "%s executing=%s reason=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$command_text" >> "$LOG_FILE"
-bash -lc "$command_text"
+candidate_hash="$(printf "%s" "$command_text" | shasum -a 256 | awk '{print $1}')"
+run_timestamp="$(date "+%Y%m%d-%H%M%S")"
+output_file="$OUTPUT_DIR/$run_timestamp-$candidate_hash.log"
+set +e
+bash -lc "$command_text" > "$output_file" 2>&1
+exit_code="$?"
+set -e
+printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$candidate_hash" "$exit_code" "$output_file" "$command_text" >> "$LOG_FILE"
+cat "$output_file"
 echo "executed=true"
 echo "classification=safe"
 echo "reason=${reason:-safe}"
+echo "candidate_hash=$candidate_hash"
+echo "exit_code=$exit_code"
+echo "output_file=$output_file"
