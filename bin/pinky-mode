@@ -29,7 +29,7 @@ case "${1:-}" in
     echo "Pinky Brain mode OFF"
     ;;
   status)
-    "$ROOT_DIR/bin/pinky-beacon-status"
+    "$ROOT_DIR/bin/pinky-status"
     ;;
   k|K|kill)
     "$ROOT_DIR/bin/pinky-kill"
