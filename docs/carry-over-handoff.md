@@ -12,7 +12,7 @@ Current clean checkpoint:
 - beacon is stopped
 - command candidate is cleared
 - dry-run returns no-candidate
-- latest commit: 11f8b80 Compact Pinky status log tails
+- latest commit: 823c00b Show full Pinky status from mode command
 
 Hard workflow rules:
 - l means: lets go and look; wait briefly, inspect terminal state, report success/failure/in-progress, then give next single safe command only if needed
@@ -42,11 +42,14 @@ Validated capabilities:
 - manual command runner has audit logging
 
 Recommended next workstream:
-WS11 — Runtime Protocol Polish + Operator UX
+WS12 — Operator Docs + Command Surface Index
 
 Completed WS10 slices:
 - k/K kill switch now stops the beacon as well as the loop.
 - pinky-status log tails are compacted from 8 lines to 4 lines.
 
+Completed WS11 slice:
+- pinky-mode status now delegates to the full read-only pinky-status dashboard.
+
 Goal:
-Polish the operator-facing runtime protocol after WS10: inspect current vocabulary/status docs, align docs with Narf and k/K behavior, and choose the next smallest safe UX improvement without introducing auto-execution or destructive side effects. Preserve manual control, no pager, read-only inspection first, and one-command-at-a-time workflow.
+Create or update a compact operator-facing command surface reference so Pinky Brain commands are easy to remember: mode on/off/status, k/K kill switch, Narf protocol, status dashboard, dry-run/command candidate flow, and safe workflow rules. Preserve manual control, no auto-execution, no pager, and one-command-at-a-time workflow.
