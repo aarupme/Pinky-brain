@@ -9,7 +9,7 @@ if [[ ! -s "$CANDIDATE_FILE" ]]; then
 fi
 command_text="$(cat "$CANDIDATE_FILE")"
 case "$command_text" in
-  cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-loop\ status|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-beacon-status|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-command-detect|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-command-extract)
+  cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-loop\ status|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-beacon-status|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-command-detect|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-command-extract|cd\ ~/Desktop/pinky-brain\ \&\&\ ./bin/pinky-status)
     echo "classification=safe"
     echo "reason=allowed-local-status-command"
     exit 0
