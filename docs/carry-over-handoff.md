@@ -12,7 +12,7 @@ Current clean checkpoint:
 - beacon is stopped
 - command candidate is cleared
 - dry-run returns no-candidate
-- latest commit: a5d0d85 Allow Pinky status in safe command flow
+- latest commit: bb863ab Normalize quotes in Pinky command extraction
 
 Hard workflow rules:
 - l means: lets go and look; wait briefly, inspect terminal state, report success/failure/in-progress, then give next single safe command only if needed
@@ -42,7 +42,7 @@ Validated capabilities:
 - manual command runner has audit logging
 
 Recommended next workstream:
-WS14 — Runtime Loop End-to-End Proof
+WS19 — Pinky Runtime Reliability Polish
 
 Completed WS10 slices:
 - k/K kill switch now stops the beacon as well as the loop.
@@ -57,5 +57,14 @@ Completed WS12 slice:
 Completed WS13 slice:
 - Candidate flow QA found and fixed the safe allowlist gap: ./bin/pinky-status now classifies and runs through the safe command flow.
 
+Completed WS14-WS18 runtime proof:
+- pinky-mode on starts the loop and beacon.
+- toolbox markers are the command execution lane.
+- commands execute visibly in Terminal.
+- command execution sends PINKY-DONE back to chat.
+- quote normalization protects copied command text.
+- signal detection is scoped to the latest response block.
+- repo is clean and synced at bb863ab.
+
 Goal:
-Prove the working runtime loop end-to-end with the smallest safe test: start mode/loop only when controlled, verify signal detection, candidate detection/extraction, dry-run, safe execution, clear state, and kill switch. Patch only blockers found during the proof. Avoid docs/polish until the runtime flow is demonstrably working.
+Polish reliability only where needed: make runtime status clearer, reduce false trigger risk, improve completion callback clarity, and keep all command execution visible in Terminal. Avoid architecture expansion until the current runtime remains stable across repeated sessions.
