@@ -41,8 +41,8 @@ Runtime signal handling:
 Validated Pinky auto-send:
 
 - Fresh standalone 🐭 detected
-- ./bin/pinky-loop once returned loop=pinky-autosent-l
-- logs/pinky-loop.log recorded autosend=l
+- ./bin/pinky-loop once returned loop=pinky-autosent-narf
+- logs/pinky-loop.log recorded autosend=Narf
 - .run/pinky-loop.last-hash was written
 
 Validated same-message protection:
@@ -57,7 +57,7 @@ Validated Brain safety:
 - ./bin/pinky-loop once returned loop=brain-needed
 - .run/pinky-signal.state contained brain
 - .run/pinky-beacon.state contained brain
-- no l was sent
+- no Narf! was sent
 
 Validated hard stop:
 
@@ -107,7 +107,7 @@ WS7 — Long-Run Supervised Loop Test
 Goal:
 Run the managed loop through a short real development cycle and confirm:
 - loop start/stop stability
-- no duplicate l sends
+- no duplicate Narf! sends
 - Brain alert pauses correctly
 - Stop signal halts correctly
 - logs remain readable

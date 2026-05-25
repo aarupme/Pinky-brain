@@ -33,8 +33,8 @@ Fresh standalone 🐭 was detected.
 Observed result:
 
 - signal=pinky
-- autosend=l
-- loop=pinky-autosent-l
+- autosend=Narf
+- loop=pinky-autosent-narf
 - .run/pinky-loop.last-hash written
 
 Result: PASS
@@ -64,7 +64,7 @@ Observed result:
 - .run/pinky-signal.state contained brain
 - .run/pinky-beacon.state contained brain
 - Brain alert sound played after detection
-- no autosend=l occurred after Brain appeared
+- no autosend=Narf occurred after Brain appeared
 
 Result: PASS
 
