@@ -9,6 +9,8 @@ Usage:
   pinky-mode on
   pinky-mode off
   pinky-mode status
+  pinky-mode k
+  pinky-mode kill
   pinky-mode help
 EOF
 }
@@ -28,6 +30,9 @@ case "${1:-}" in
     ;;
   status)
     "$ROOT_DIR/bin/pinky-beacon-status"
+    ;;
+  k|K|kill)
+    "$ROOT_DIR/bin/pinky-kill"
     ;;
   help|--help|-h)
     usage
