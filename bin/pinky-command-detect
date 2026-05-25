@@ -7,8 +7,10 @@ trap 'rm -f "$TMP_FILE"' EXIT
   echo "pinky-command-detect error: failed to read visible ChatGPT text" >&2
   exit 1
 }
-if grep -Fq "# 🐭 pinky-run" "$TMP_FILE"; then
+if (grep -Fq "# 🐭 pinky-run" "$TMP_FILE" || grep -Fq "🐭 pinky-run" "$TMP_FILE") && (grep -Fq "# 👀 pinky-ready" "$TMP_FILE" || grep -Fq "👀 pinky-ready" "$TMP_FILE"); then
   echo "pinky_runnable=present"
+  exit 0
 else
   echo "pinky_runnable=none"
+  exit 2
 fi

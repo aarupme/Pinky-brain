@@ -43,6 +43,14 @@ loop_once() {
     return 0
   fi
 
+  if "$ROOT_DIR/bin/pinky-command-detect" >/dev/null 2>&1; then
+    if "$ROOT_DIR/bin/pinky-command-extract" >/dev/null 2>&1; then
+      "$ROOT_DIR/bin/pinky-command-run" >> "$LOG_FILE" 2>&1 || true
+      echo "loop=command-checked"
+      return 0
+    fi
+  fi
+
   tmp_output="$(mktemp)"
   "$ROOT_DIR/bin/pinky-watch-once" > "$tmp_output" 2>&1 &
   watch_pid="$!"

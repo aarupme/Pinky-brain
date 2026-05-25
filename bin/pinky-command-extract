@@ -4,6 +4,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUN_DIR="$ROOT_DIR/.run"
 TMP_FILE="$(mktemp)"
 CANDIDATE_FILE="$RUN_DIR/pinky-command.candidate"
+LAST_HASH_FILE="$RUN_DIR/pinky-command.last-hash"
 mkdir -p "$RUN_DIR"
 trap 'rm -f "$TMP_FILE"' EXIT
 "$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1 || {
@@ -11,11 +12,24 @@ trap 'rm -f "$TMP_FILE"' EXIT
   exit 1
 }
 rm -f "$CANDIDATE_FILE"
-awk 'index($0, "# 🐭 pinky-run") { armed=1; command=""; next } armed && /^[[:space:]]*cd[[:space:]]+~\/Desktop\/pinky-brain[[:space:]]+&&/ && $0 !~ /pinky-command-extract/ && $0 !~ /git status/ && $0 !~ /sleep/ { command=$0; next } armed && index($0, "# 👀 pinky-ready") && command != "" { print command; found=1; exit } END { if (!found) exit 2 }' "$TMP_FILE" > "$CANDIDATE_FILE" || true
+awk '(index($0, "# 🐭 pinky-run") || index($0, "🐭 pinky-run")) { armed=1; command=""; next } armed && /^[[:space:]]*cd[[:space:]]+~\/Desktop\/pinky-brain[[:space:]]+&&/ && $0 !~ /pinky-command-extract/ && $0 !~ /git status/ && $0 !~ /sleep/ { command=$0; next } armed && (index($0, "# 👀 pinky-ready") || index($0, "👀 pinky-ready")) && command != "" { print command; found=1; exit } END { if (!found) exit 2 }' "$TMP_FILE" > "$CANDIDATE_FILE" || true
 if [[ -s "$CANDIDATE_FILE" ]]; then
+  command_text="$(cat "$CANDIDATE_FILE")"
+  command_hash="$(printf "%s" "$command_text" | shasum -a 256 | awk '{print $1}')"
+  last_hash=""
+  if [[ -s "$LAST_HASH_FILE" ]]; then
+    last_hash="$(cat "$LAST_HASH_FILE")"
+  fi
+  if [[ -n "$last_hash" && "$command_hash" == "$last_hash" ]]; then
+    rm -f "$CANDIDATE_FILE"
+    echo "pinky_command=duplicate"
+    echo "candidate_hash=$command_hash"
+    exit 3
+  fi
   echo "pinky_command=present"
   echo "candidate_file=$CANDIDATE_FILE"
 else
   rm -f "$CANDIDATE_FILE"
   echo "pinky_command=none"
+  exit 2
 fi

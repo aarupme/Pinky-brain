@@ -2,6 +2,7 @@
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CANDIDATE_FILE="$ROOT_DIR/.run/pinky-command.candidate"
+LAST_HASH_FILE="$ROOT_DIR/.run/pinky-command.last-hash"
 LOG_FILE="$ROOT_DIR/logs/pinky-command-run.log"
 OUTPUT_DIR="$ROOT_DIR/logs/command-runs"
 mkdir -p "$ROOT_DIR/logs" "$OUTPUT_DIR"
@@ -29,6 +30,7 @@ bash -lc "$command_text" > "$output_file" 2>&1
 exit_code="$?"
 set -e
 printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$candidate_hash" "$exit_code" "$output_file" "$command_text" >> "$LOG_FILE"
+printf "%s\n" "$candidate_hash" > "$LAST_HASH_FILE"
 cat "$output_file"
 echo "executed=true"
 echo "classification=safe"
