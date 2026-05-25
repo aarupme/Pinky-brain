@@ -12,7 +12,7 @@ Current clean checkpoint:
 - beacon is stopped
 - command candidate is cleared
 - dry-run returns no-candidate
-- latest commit: 296f6e0 Add Pinky status dashboard command
+- latest commit: 11f8b80 Compact Pinky status log tails
 
 Hard workflow rules:
 - l means: lets go and look; wait briefly, inspect terminal state, report success/failure/in-progress, then give next single safe command only if needed
@@ -42,7 +42,11 @@ Validated capabilities:
 - manual command runner has audit logging
 
 Recommended next workstream:
-WS10 — Runtime Hardening: Local Kill Switch + Log Compaction
+WS11 — Runtime Protocol Polish + Operator UX
+
+Completed WS10 slices:
+- k/K kill switch now stops the beacon as well as the loop.
+- pinky-status log tails are compacted from 8 lines to 4 lines.
 
 Goal:
-Implement and document the next safe runtime hardening slice: inspect current k/K kill-switch support, decide the smallest local-safe implementation path, and improve operator readability without introducing auto-execution or destructive side effects. Preserve manual control, no background command execution, no pager, and one-command-at-a-time workflow.
+Polish the operator-facing runtime protocol after WS10: inspect current vocabulary/status docs, align docs with Narf and k/K behavior, and choose the next smallest safe UX improvement without introducing auto-execution or destructive side effects. Preserve manual control, no pager, read-only inspection first, and one-command-at-a-time workflow.
