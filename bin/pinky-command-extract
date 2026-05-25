@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+TMP_FILE="$(mktemp)"
+CANDIDATE_FILE="$RUN_DIR/pinky-command.candidate"
+mkdir -p "$RUN_DIR"
+trap 'rm -f "$TMP_FILE"' EXIT
+"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1 || {
+  echo "pinky-command-extract error: failed to read visible ChatGPT text" >&2
+  exit 1
+}
+rm -f "$CANDIDATE_FILE"
+awk 'index($0, "# 🐭 pinky-run") { armed=1; next } armed && /^[[:space:]]*cd[[:space:]]+~\/Desktop\/pinky-brain[[:space:]]+&&/ && $0 !~ /pinky-command-extract/ && $0 !~ /git status/ && $0 !~ /sleep/ { print; found=1; exit } END { if (!found) exit 2 }' "$TMP_FILE" > "$CANDIDATE_FILE" || true
+if [[ -s "$CANDIDATE_FILE" ]]; then
+  echo "pinky_command=present"
+  echo "candidate_file=$CANDIDATE_FILE"
+else
+  rm -f "$CANDIDATE_FILE"
+  echo "pinky_command=none"
+fi
