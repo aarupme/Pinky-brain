@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CANDIDATE_FILE="$ROOT_DIR/.run/pinky-command.candidate"
+rm -f "$CANDIDATE_FILE"
+echo "pinky_command=cleared"
