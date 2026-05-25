@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CANDIDATE_FILE="$ROOT_DIR/.run/pinky-command.candidate"
+classification_output="$("$ROOT_DIR/bin/pinky-command-classify")"
+classification="$(printf "%s\n" "$classification_output" | awk -F= "/^classification=/{print \$2; exit}")"
+reason="$(printf "%s\n" "$classification_output" | awk -F= "/^reason=/{print \$2; exit}")"
+case "${classification:-none}" in
+  none)
+    echo "would_execute=false"
+    echo "classification=none"
+    echo "reason=${reason:-no-candidate}"
+    ;;
+  safe)
+    echo "would_execute=true"
+    echo "classification=safe"
+    echo "reason=${reason:-safe}"
+    echo "candidate=$(cat "$CANDIDATE_FILE")"
+    ;;
+  brain_required)
+    echo "would_execute=false"
+    echo "classification=brain_required"
+    echo "reason=${reason:-brain-required}"
+    echo "candidate=$(cat "$CANDIDATE_FILE")"
+    ;;
+  blocked)
+    echo "would_execute=false"
+    echo "classification=blocked"
+    echo "reason=${reason:-blocked}"
+    echo "candidate=$(cat "$CANDIDATE_FILE")"
+    ;;
+  *)
+    echo "would_execute=false"
+    echo "classification=blocked"
+    echo "reason=unknown-classification"
+    ;;
+esac
