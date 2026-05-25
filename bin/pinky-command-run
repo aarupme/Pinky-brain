@@ -27,7 +27,15 @@ candidate_hash="$(printf "%s" "$command_text" | shasum -a 256 | awk '{print $1}'
 run_timestamp="$(date "+%Y%m%d-%H%M%S")"
 output_file="$OUTPUT_DIR/$run_timestamp-$candidate_hash.log"
 set +e
-bash -lc "$command_text" > "$output_file" 2>&1
+osascript - "$command_text" <<'APPLESCRIPT' > "$output_file" 2>&1
+on run argv
+  set commandText to item 1 of argv
+  tell application "Terminal"
+    activate
+    do script commandText in front window
+  end tell
+end run
+APPLESCRIPT
 exit_code="$?"
 set -e
 printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$candidate_hash" "$exit_code" "$output_file" "$command_text" >> "$LOG_FILE"
