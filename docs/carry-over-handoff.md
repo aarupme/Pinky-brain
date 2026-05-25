@@ -12,7 +12,7 @@ Current clean checkpoint:
 - beacon is stopped
 - command candidate is cleared
 - dry-run returns no-candidate
-- latest commit: 7a97240 Update historical docs for Narf vocabulary
+- latest commit: 296f6e0 Add Pinky status dashboard command
 
 Hard workflow rules:
 - l means: lets go and look; wait briefly, inspect terminal state, report success/failure/in-progress, then give next single safe command only if needed
@@ -42,7 +42,7 @@ Validated capabilities:
 - manual command runner has audit logging
 
 Recommended next workstream:
-WS9 — Pinky Status Dashboard Command
+WS10 — Runtime Hardening: Local Kill Switch + Log Compaction
 
 Goal:
-Create ./bin/pinky-status showing git cleanliness, loop status, beacon status, command candidate/dry-run status, latest signal/beacon state, and recent log tail. It must be read-only, no side effects, no pager, short output.
+Implement and document the next safe runtime hardening slice: inspect current k/K kill-switch support, decide the smallest local-safe implementation path, and improve operator readability without introducing auto-execution or destructive side effects. Preserve manual control, no background command execution, no pager, and one-command-at-a-time workflow.
