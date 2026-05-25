@@ -23,7 +23,7 @@ case "$command_text" in
     ;;
 esac
 case "$command_text" in
-  *git\ push*|*npm\ install*|*pnpm\ install*|*yarn\ add*|*brew\ install*|*pip\ install*|*deploy*|*migration*|*schema*)
+  *npm\ install*|*pnpm\ install*|*yarn\ add*|*brew\ install*|*pip\ install*|*deploy*|*migration*|*schema*)
     echo "classification=brain_required"
     echo "reason=high-impact-command-pattern"
     exit 0
