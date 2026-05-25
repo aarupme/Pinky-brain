@@ -11,7 +11,7 @@ trap 'rm -f "$TMP_FILE"' EXIT
   exit 1
 }
 rm -f "$CANDIDATE_FILE"
-awk 'index($0, "# 🐭 pinky-run") { armed=1; next } armed && /^[[:space:]]*cd[[:space:]]+~\/Desktop\/pinky-brain[[:space:]]+&&/ && $0 !~ /pinky-command-extract/ && $0 !~ /git status/ && $0 !~ /sleep/ { print; found=1; exit } END { if (!found) exit 2 }' "$TMP_FILE" > "$CANDIDATE_FILE" || true
+awk 'index($0, "# 🐭 pinky-run") { armed=1; command=""; next } armed && /^[[:space:]]*cd[[:space:]]+~\/Desktop\/pinky-brain[[:space:]]+&&/ && $0 !~ /pinky-command-extract/ && $0 !~ /git status/ && $0 !~ /sleep/ { command=$0; next } armed && index($0, "# 👀 pinky-ready") && command != "" { print command; found=1; exit } END { if (!found) exit 2 }' "$TMP_FILE" > "$CANDIDATE_FILE" || true
 if [[ -s "$CANDIDATE_FILE" ]]; then
   echo "pinky_command=present"
   echo "candidate_file=$CANDIDATE_FILE"
