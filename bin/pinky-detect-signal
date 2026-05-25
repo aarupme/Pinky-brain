@@ -20,8 +20,23 @@ fi
 latest_signal=""
 latest_line_no=""
 line_no=0
+block_start=0
+prev_cleaned=""
 while IFS= read -r line; do
   line_no=$((line_no + 1))
+  cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+  if [[ "$prev_cleaned" == "text" && "$cleaned" == "text" ]]; then
+    block_start="$line_no"
+  fi
+  prev_cleaned="$cleaned"
+done < "$TMP_FILE"
+
+line_no=0
+while IFS= read -r line; do
+  line_no=$((line_no + 1))
+  if [[ "$line_no" -le "$block_start" ]]; then
+    continue
+  fi
   cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
   case "$cleaned" in
     "🐭") latest_signal="pinky"; latest_line_no="$line_no" ;;
@@ -33,7 +48,7 @@ done < "$TMP_FILE"
 case "$latest_signal" in
   pinky|brain|stop)
     printf "%s\n" "$latest_signal" > "$SIGNAL_FILE"
-    printf "%s:%s\n" "$latest_signal" "$latest_line_no" > "$CONTEXT_FILE"
+    printf "%s:%s:%s\n" "$latest_signal" "$block_start" "$latest_line_no" > "$CONTEXT_FILE"
     ;;
 esac
 
