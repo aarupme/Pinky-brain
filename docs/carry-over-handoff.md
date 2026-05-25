@@ -12,7 +12,7 @@ Current clean checkpoint:
 - beacon is stopped
 - command candidate is cleared
 - dry-run returns no-candidate
-- latest commit: 6dffda8 Add Pinky operator command reference
+- latest commit: a5d0d85 Allow Pinky status in safe command flow
 
 Hard workflow rules:
 - l means: lets go and look; wait briefly, inspect terminal state, report success/failure/in-progress, then give next single safe command only if needed
@@ -42,7 +42,7 @@ Validated capabilities:
 - manual command runner has audit logging
 
 Recommended next workstream:
-WS13 — Runtime Candidate Flow QA
+WS14 — Runtime Loop End-to-End Proof
 
 Completed WS10 slices:
 - k/K kill switch now stops the beacon as well as the loop.
@@ -54,5 +54,8 @@ Completed WS11 slice:
 Completed WS12 slice:
 - Added docs/operator-command-reference.md as the compact operator command surface index.
 
+Completed WS13 slice:
+- Candidate flow QA found and fixed the safe allowlist gap: ./bin/pinky-status now classifies and runs through the safe command flow.
+
 Goal:
-QA the command candidate flow end-to-end without executing unsafe commands: inspect marker detection, extraction, dry-run classification, candidate clearing, and status visibility. Patch only the smallest safe issue found, preserving manual control, no pager, no auto-execution, and one-command-at-a-time workflow.
+Prove the working runtime loop end-to-end with the smallest safe test: start mode/loop only when controlled, verify signal detection, candidate detection/extraction, dry-run, safe execution, clear state, and kill switch. Patch only blockers found during the proof. Avoid docs/polish until the runtime flow is demonstrably working.
