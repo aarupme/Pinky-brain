@@ -42,7 +42,7 @@ log_tail() {
   local path="$2"
   printf '%s\n' "--- $label ---"
   if [[ -s "$path" ]]; then
-    tail -n 8 "$path"
+    tail -n 4 "$path"
   else
     printf 'none\n'
   fi
