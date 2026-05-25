@@ -44,9 +44,21 @@ loop_once() {
   fi
 
   if "$ROOT_DIR/bin/pinky-command-detect" >/dev/null 2>&1; then
-    if "$ROOT_DIR/bin/pinky-command-extract" >/dev/null 2>&1; then
+    set +e
+    extract_output="$("$ROOT_DIR/bin/pinky-command-extract" 2>&1)"
+    extract_exit="$?"
+    set -e
+    if [[ "$extract_exit" -eq 0 ]]; then
       "$ROOT_DIR/bin/pinky-command-run" >> "$LOG_FILE" 2>&1 || true
       echo "loop=command-checked"
+      return 0
+    fi
+    if [[ "$extract_exit" -eq 3 ]]; then
+      duplicate_hash="$(printf "%s\\n" "$extract_output" | awk -F= '/^candidate_hash=/{print $2; exit}')"
+      [[ -n "${duplicate_hash:-}" ]] || duplicate_hash="duplicate"
+      printf "%s command=duplicate candidate_hash=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$duplicate_hash" >> "$LOG_FILE"
+      "$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE duplicate $duplicate_hash" >/dev/null 2>&1 || true
+      echo "loop=command-duplicate-callback"
       return 0
     fi
   fi
