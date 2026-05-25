@@ -19,6 +19,7 @@ case "${1:-}" in
   on)
     "$ROOT_DIR/bin/pinky-layout"
     "$ROOT_DIR/bin/pinky-beacon-start"
+    "$ROOT_DIR/bin/pinky-loop" start
     "$ROOT_DIR/bin/pinky-send" --start
     echo "Pinky Brain mode ON"
     ;;
