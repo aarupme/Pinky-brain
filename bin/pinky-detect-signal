@@ -17,29 +17,28 @@ if [[ "$read_status" -ne 0 ]]; then
   exit 1
 fi
 
-signal_count=0
-
+last_line=""
 while IFS= read -r line; do
   cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+  if [[ -n "$cleaned" ]]; then
+    last_line="$cleaned"
+  fi
+done < "$TMP_FILE"
 
-  case "$cleaned" in
-    "🐭")
-      signal_count=$((signal_count + 1))
-      printf "%s\n" "pinky" > "$SIGNAL_FILE"
-      printf "%s|%s\n" "$signal_count" "$cleaned" > "$CONTEXT_FILE"
-      ;;
-    "🧠"|"<0001f9e0>")
-      signal_count=$((signal_count + 1))
-      printf "%s\n" "brain" > "$SIGNAL_FILE"
-      printf "%s|%s\n" "$signal_count" "$cleaned" > "$CONTEXT_FILE"
-      ;;
-    "🛑")
-      signal_count=$((signal_count + 1))
-      printf "%s\n" "stop" > "$SIGNAL_FILE"
-      printf "%s|%s\n" "$signal_count" "$cleaned" > "$CONTEXT_FILE"
-      ;;
-  esac
-done < <(tail -120 "$TMP_FILE")
+case "$last_line" in
+  "🐭")
+    printf "%s\n" "pinky" > "$SIGNAL_FILE"
+    printf "%s\n" "$last_line" > "$CONTEXT_FILE"
+    ;;
+  "🧠"|"<0001f9e0>")
+    printf "%s\n" "brain" > "$SIGNAL_FILE"
+    printf "%s\n" "$last_line" > "$CONTEXT_FILE"
+    ;;
+  "🛑")
+    printf "%s\n" "stop" > "$SIGNAL_FILE"
+    printf "%s\n" "$last_line" > "$CONTEXT_FILE"
+    ;;
+esac
 
 if [[ -s "$SIGNAL_FILE" ]]; then
   signal="$(tail -1 "$SIGNAL_FILE")"

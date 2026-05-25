@@ -23,7 +23,7 @@ case "$command_text" in
     ;;
 esac
 case "$command_text" in
-  *git\ push*|*git\ commit*|*npm\ install*|*pnpm\ install*|*yarn\ add*|*brew\ install*|*pip\ install*|*deploy*|*migration*|*schema*)
+  *git\ push*|*npm\ install*|*pnpm\ install*|*yarn\ add*|*brew\ install*|*pip\ install*|*deploy*|*migration*|*schema*)
     echo "classification=brain_required"
     echo "reason=high-impact-command-pattern"
     exit 0
@@ -31,8 +31,8 @@ case "$command_text" in
 esac
 case "$command_text" in
   cd\ ~/Desktop/pinky-brain\ \&\&\ *)
-    echo "classification=brain_required"
-    echo "reason=unrecognized-project-command"
+    echo "classification=safe"
+    echo "reason=allowed-project-local-command"
     exit 0
     ;;
   *)
