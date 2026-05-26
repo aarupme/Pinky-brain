@@ -24,6 +24,8 @@ case "${1:-}" in
     "$ROOT_DIR/bin/pinky-loop" start
     "$ROOT_DIR/bin/pinky-send" --start
     echo "Pinky Brain mode ON"
+    "$ROOT_DIR/bin/pinky-protocol"
+    "$ROOT_DIR/bin/pinky-status"
     ;;
   off)
     "$ROOT_DIR/bin/pinky-kill"
