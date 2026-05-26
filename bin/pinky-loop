@@ -63,7 +63,7 @@ loop_once() {
       printf "%s command=duplicate candidate_hash=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$duplicate_hash" >> "$LOG_FILE"
       if [[ "$duplicate_hash" != "$last_duplicate_hash" ]]; then
         printf "%s" "$duplicate_hash" > "$COMMAND_DUPLICATE_HASH_FILE"
-        echo "loop=command-duplicate-callback"
+        echo "loop=command-duplicate-silent"
       else
         echo "loop=command-duplicate-suppressed"
       fi
