@@ -5,10 +5,12 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP_FILE="$(mktemp)"
 SIGNAL_FILE="$(mktemp)"
 CONTEXT_FILE="$(mktemp)"
-trap 'rm -f "$TMP_FILE" "$SIGNAL_FILE" "$CONTEXT_FILE"' EXIT
+trap 'rm -f "$TMP_FILE" "$SIGNAL_FILE" "$CONTEXT_FILE" "$CONTEXT_FILE.block"' EXIT
+
+READ_VISIBLE="${PINKY_READ_VISIBLE:-$ROOT_DIR/bin/pinky-read-visible}"
 
 set +e
-"$ROOT_DIR/bin/pinky-read-visible" > "$TMP_FILE" 2>&1
+"$READ_VISIBLE" > "$TMP_FILE" 2>&1
 read_status="$?"
 set -e
 
@@ -48,7 +50,9 @@ done < "$TMP_FILE"
 case "$latest_signal" in
   pinky|brain|stop)
     printf "%s\n" "$latest_signal" > "$SIGNAL_FILE"
-    printf "%s:%s:%s\n" "$latest_signal" "$block_start" "$latest_line_no" > "$CONTEXT_FILE"
+    awk -v start="$block_start" 'NR > start { print }' "$TMP_FILE" | shasum -a 256 | awk '{print $1}' > "$CONTEXT_FILE.block"
+    block_hash="$(cat "$CONTEXT_FILE.block")"
+    printf "%s:%s:%s:%s\n" "$latest_signal" "$block_start" "$latest_line_no" "$block_hash" > "$CONTEXT_FILE"
     ;;
 esac
 
