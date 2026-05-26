@@ -95,7 +95,11 @@ loop_once() {
     elapsed=$((elapsed + 1))
   done
 
-  "$ROOT_DIR/bin/pinky-set-state" reading >/dev/null 2>&1 || true
+  current_signal_state=""
+  [[ -f "$RUN_DIR/pinky-signal.state" ]] && current_signal_state="$(cat "$RUN_DIR/pinky-signal.state" || true)"
+  if [[ "$current_signal_state" != "brain" ]]; then
+    "$ROOT_DIR/bin/pinky-set-state" reading >/dev/null 2>&1 || true
+  fi
   signal_output="$(cat "$tmp_output" || true)"
   rm -f "$tmp_output"
   signal="$(printf "%s\n" "$signal_output" | awk -F= '/^signal=/{print $2; exit}')"
