@@ -3,6 +3,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CANDIDATE_FILE="$ROOT_DIR/.run/pinky-command.candidate"
 LAST_HASH_FILE="$ROOT_DIR/.run/pinky-command.last-hash"
+LAST_RUN_FILE="$ROOT_DIR/.run/pinky-command.last-run"
 LOG_FILE="$ROOT_DIR/logs/pinky-command-run.log"
 OUTPUT_DIR="$ROOT_DIR/logs/command-runs"
 mkdir -p "$ROOT_DIR/logs" "$OUTPUT_DIR"
@@ -45,6 +46,7 @@ exit_code="$?"
 set -e
 printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s command=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$classification" "${reason:-safe}" "$candidate_hash" "$exit_code" "$output_file" "$command_text" >> "$LOG_FILE"
 printf "%s\n" "$candidate_hash" > "$LAST_HASH_FILE"
+printf "time=%s\nexit_code=%s\nhash=%s\nlog=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$exit_code" "$candidate_hash" "$output_file" > "$LAST_RUN_FILE"
 rm -f "$CANDIDATE_FILE"
 "$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE $candidate_hash" >/dev/null 2>&1 || true
 "$ROOT_DIR/bin/pinky-set-state" done >/dev/null 2>&1 || true

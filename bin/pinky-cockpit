@@ -9,6 +9,8 @@ LOOP_PID="$RUN_DIR/pinky-loop.pid"
 BEACON_PID="$RUN_DIR/pinky-beacon.pid"
 LOOP_STOP="$RUN_DIR/pinky-loop.stop"
 COMMAND_CANDIDATE="$RUN_DIR/pinky-command.candidate"
+LAST_REJECTION_FILE="$RUN_DIR/pinky-command.last-rejection"
+LAST_RUN_FILE="$RUN_DIR/pinky-command.last-run"
 
 supports_color=0
 if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
@@ -76,3 +78,21 @@ if [[ "$stop" == "present" ]]; then status_dot warn; else status_dot ok; fi
 printf " stop=%s  " "$stop"
 status_dot "$git_state"; printf " git=%s  " "$git_state"
 check_mark "$git_state"; printf "\n"
+
+if [[ -s "$LAST_REJECTION_FILE" ]]; then
+  reason="$(awk -F= '/^reason=/{print $2; exit}' "$LAST_REJECTION_FILE")"
+  source="$(awk -F= '/^source=/{print $2; exit}' "$LAST_REJECTION_FILE")"
+  time="$(awk -F= '/^time=/{print substr($0,6); exit}' "$LAST_REJECTION_FILE")"
+  printf "last_rejection=time=%s source=%s reason=%s\n" "$time" "$source" "$reason"
+else
+  printf "last_rejection=none\n"
+fi
+
+if [[ -s "$LAST_RUN_FILE" ]]; then
+  exit_code="$(awk -F= '/^exit_code=/{print $2; exit}' "$LAST_RUN_FILE")"
+  log_path="$(awk -F= '/^log=/{print $2; exit}' "$LAST_RUN_FILE")"
+  time="$(awk -F= '/^time=/{print substr($0,6); exit}' "$LAST_RUN_FILE")"
+  printf "last_run=time=%s exit_code=%s log=%s\n" "$time" "$exit_code" "$log_path"
+else
+  printf "last_run=none\n"
+fi
