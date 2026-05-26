@@ -48,7 +48,6 @@ printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s 
 printf "%s\n" "$candidate_hash" > "$LAST_HASH_FILE"
 printf "time=%s\nexit_code=%s\nhash=%s\nlog=%s\n" "$(date "+%Y-%m-%d %H:%M:%S")" "$exit_code" "$candidate_hash" "$output_file" > "$LAST_RUN_FILE"
 rm -f "$CANDIDATE_FILE"
-"$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE $candidate_hash" >/dev/null 2>&1 || true
 "$ROOT_DIR/bin/pinky-set-state" done >/dev/null 2>&1 || true
 cat "$output_file"
 echo "executed=true"
