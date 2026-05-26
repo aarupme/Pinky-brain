@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+fixture="${1:?fixture required}"
+expected="${2:?expected command required}"
+reader="$ROOT_DIR/.run/test-pinky-read-visible-command"
+out="$ROOT_DIR/.run/test-command-extract-output"
+mkdir -p "$ROOT_DIR/.run"
+printf "#!/usr/bin/env bash
+cat \"%s\"
+" "$ROOT_DIR/tests/fixtures/$fixture" > "$reader"
+chmod +x "$reader"
+PINKY_READ_VISIBLE="$reader" "$ROOT_DIR/bin/pinky-command-extract" > "$out" || true
+state="$(awk -F= '/^pinky_command=/{print $2; exit}' "$out")"
+if [[ "$state" == "present" ]]; then
+  candidate="$(awk -F= '/^candidate_file=/{print substr($0, index($0,"=")+1); exit}' "$out")"
+  actual="$(cat "$candidate")"
+else
+  actual="none"
+fi
+if [[ "$actual" != "$expected" ]]; then
+  echo "FAIL fixture=$fixture"
+  echo "expected=$expected"
+  echo "actual=$actual"
+  cat "$out"
+  exit 1
+fi
+echo "PASS fixture=$fixture runnable=$actual"

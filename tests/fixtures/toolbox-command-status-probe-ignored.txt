@@ -1,0 +1,5 @@
+text
+text
+🧰 PINKY-RUN
+cd ~/Desktop/pinky-brain && git status --short --branch
+🧰 PINKY-READY

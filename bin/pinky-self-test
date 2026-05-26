@@ -10,8 +10,11 @@ printf "root=%s\n\n" "$ROOT_DIR"
 printf "%s\n" "--- status ---"
 ./bin/pinky-status
 
-printf "\n%s\n" "--- detector fixtures ---"
+printf "\n%s\n" "--- signal fixtures ---"
 tests/run-detect-signal-fixtures
+
+printf "\n%s\n" "--- command fixtures ---"
+tests/run-command-extract-fixtures
 
 printf "\n%s\n" "--- result ---"
 printf "self-test=pass\n"
