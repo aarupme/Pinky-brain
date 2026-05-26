@@ -95,3 +95,6 @@ printf '\n%s\n' '--- recent logs ---'
 log_tail "pinky-loop.log" "$LOG_DIR/pinky-loop.log"
 log_tail "pinky-signal.log" "$LOG_DIR/pinky-signal.log"
 log_tail "pinky-command-run.log" "$LOG_DIR/pinky-command-run.log"
+
+printf '\n--- report ---\n'
+"$ROOT_DIR/bin/pinky-cockpit"
