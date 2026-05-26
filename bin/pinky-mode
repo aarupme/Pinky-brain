@@ -17,6 +17,7 @@ EOF
 
 case "${1:-}" in
   on)
+    rm -f "$ROOT_DIR/.run/pinky-loop.last-hash" "$ROOT_DIR/.run/pinky-loop.last-send" "$ROOT_DIR/.run/pinky-signal.hash" "$ROOT_DIR/.run/pinky-signal.state"
     "$ROOT_DIR/bin/pinky-layout"
     "$ROOT_DIR/bin/pinky-beacon-start"
     "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
