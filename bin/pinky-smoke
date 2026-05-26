@@ -54,6 +54,7 @@ printf "syntax=pass\n"
 section "fixtures"
 tests/run-detect-signal-fixtures
 tests/run-command-extract-fixtures
+tests/run-alert-token-fixtures
 printf "fixtures=pass\n"
 
 if (( SOUND_MODE )); then

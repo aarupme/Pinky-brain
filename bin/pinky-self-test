@@ -16,5 +16,8 @@ tests/run-detect-signal-fixtures
 printf "\n%s\n" "--- command fixtures ---"
 tests/run-command-extract-fixtures
 
+printf "\n%s\n" "--- alert token fixtures ---"
+tests/run-alert-token-fixtures
+
 printf "\n%s\n" "--- result ---"
 printf "self-test=pass\n"

@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 STATE_DIR="$ROOT_DIR/.run"
 BEACON_STATE_FILE="$STATE_DIR/pinky-beacon.state"
+BEACON_ALERT_FILE="$STATE_DIR/pinky-beacon.alert"
 
 mkdir -p "$STATE_DIR"
 
@@ -30,7 +31,17 @@ state="${1:-}"
 case "$state" in
   idle|watching|reading|pinky|brain|toolbox|executing|done|duplicate|blocked|paused|stopped)
     printf "%s\n" "$state" > "$BEACON_STATE_FILE"
-    echo "beacon_state=$state"
+    if [[ "$state" == "brain" ]]; then
+      alert_token="${2:-}"
+      if [[ -z "$alert_token" ]]; then
+        alert_token="$(date +%s)-$$"
+      fi
+      printf "%s\n" "$alert_token" > "$BEACON_ALERT_FILE"
+      echo "beacon_state=$state"
+      echo "beacon_alert=$alert_token"
+    else
+      echo "beacon_state=$state"
+    fi
     ;;
   ""|help|--help|-h)
     usage
