@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cat <<'EOF'
+Pinky Brain Protocol Contract
+
+Runtime lanes:
+- Brain/user Terminal lane: manual commands shown after the brain symbol.
+- Pinky toolbox lane: runnable commands only between toolbox RUN and READY markers.
+- Conversation continuation lane: standalone continuation signal only.
+
+Standalone control signals:
+- Narf! means Pinky automated continuation callback.
+- mouse symbol means safe continuation is available.
+- brain symbol means human/model decision required.
+- stop symbol means hard stop.
+- k or K means manual kill switch.
+
+Strict signal rule:
+- Runtime control signals must be standalone lines only.
+- Prefix prose plus a signal must not match.
+- Do not patch Pinky to compensate for inconsistent assistant formatting unless the protocol is intentionally redesigned and fixture-tested.
+
+Command execution rule:
+- Pinky executes only project-prefixed commands exposed in the toolbox command lane.
+- Human/manual commands belong in the Brain/user Terminal lane.
+- High-impact actions require brain review.
+
+Recommended status check:
+cd ~/Desktop/pinky-brain && ./bin/pinky-status
+EOF
