@@ -55,6 +55,18 @@ loop_once() {
       echo "loop=command-checked"
       return 0
     fi
+    if [[ "$extract_exit" -eq 4 ]]; then
+      reject_reason="$(printf "%s\\n" "$extract_output" | awk -F= '/^reason=/{print $2; exit}')"
+      reject_source="$(printf "%s\\n" "$extract_output" | awk -F= '/^source=/{print $2; exit}')"
+      [[ -n "${reject_reason:-}" ]] || reject_reason="unknown"
+      [[ -n "${reject_source:-}" ]] || reject_source="unknown"
+      "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
+      printf "%s command=rejected source=%s reason=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$reject_source" "$reject_reason" >> "$LOG_FILE"
+      echo "loop=command-rejected"
+      echo "source=$reject_source"
+      echo "reason=$reject_reason"
+      return 0
+    fi
     if [[ "$extract_exit" -eq 3 ]]; then
       duplicate_hash="$(printf "%s\\n" "$extract_output" | awk -F= '/^candidate_hash=/{print $2; exit}')"
       [[ -n "${duplicate_hash:-}" ]] || duplicate_hash="duplicate"

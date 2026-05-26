@@ -22,6 +22,7 @@ text = open(path, "r", encoding="utf-8", errors="replace").read()
 marker = "PINKY-CODE-RUN"
 fence = chr(96) * 3
 idx = text.rfind(marker)
+marker_seen = idx >= 0
 if idx >= 0:
     tail = text[idx + len(marker):]
     start = tail.find(fence)
@@ -36,9 +37,19 @@ if idx >= 0:
                 if payload:
                     print(payload)
                     raise SystemExit(0)
+if marker_seen:
+    print("__PINKY_CODE_MARKER_INVALID__")
 raise SystemExit(2)
 PY
 )" || true
+
+if [[ "${code_command:-}" == "__PINKY_CODE_MARKER_INVALID__" ]]; then
+  echo "pinky_command=rejected"
+  echo "source=code-block"
+  echo "reason=code-marker-without-valid-block"
+  rm -f "$CANDIDATE_FILE"
+  exit 4
+fi
 
 if [[ -n "${code_command:-}" ]]; then
   printf "%s\n" "$code_command" | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE"
