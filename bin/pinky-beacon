@@ -73,6 +73,8 @@ class PinkyBeacon:
         self.sound_brain_path = os.path.join(os.path.dirname(__file__), "pinky-sound-brain")
         self.beacon_state_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".run", "pinky-beacon.state")
         self.beacon_alert_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".run", "pinky-beacon.alert")
+        self.beacon_alert_seen_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".run", "pinky-beacon.alert.seen")
+        self.last_brain_alert_token = self._read_seen_alert_token()
 
         self.root.geometry(f"{self.width}x{self.height}+{self.x}+{self.y}")
         self.root.configure(bg="#000001")
@@ -191,10 +193,12 @@ class PinkyBeacon:
 
         if state_key == "brain":
             alert_token = self._read_alert_token()
-            if alert_token and alert_token != self.last_brain_alert_token:
-                self._play_brain_sound()
-                self.last_brain_alert_token = alert_token
-                self.brain_alert_latched = True
+            if alert_token:
+                if alert_token != self.last_brain_alert_token:
+                    self._play_brain_sound()
+                    self.last_brain_alert_token = alert_token
+                    self._write_seen_alert_token(alert_token)
+                    self.brain_alert_latched = True
             elif previous_state_key != "brain" and not self.brain_alert_latched:
                 self._play_brain_sound()
                 self.brain_alert_latched = True
@@ -208,10 +212,25 @@ class PinkyBeacon:
         except OSError:
             requested_state = ""
 
-        if requested_state in STATES and requested_state != self.current_state_key:
-            self.set_state(requested_state)
+        if requested_state in STATES:
+            if requested_state != self.current_state_key or requested_state == "brain":
+                self.set_state(requested_state)
 
         self.root.after(500, self._poll_state_file)
+
+    def _read_seen_alert_token(self) -> str:
+        try:
+            with open(self.beacon_alert_seen_file, "r", encoding="utf-8") as file:
+                return file.read().strip()
+        except OSError:
+            return ""
+
+    def _write_seen_alert_token(self, alert_token: str) -> None:
+        try:
+            with open(self.beacon_alert_seen_file, "w", encoding="utf-8") as file:
+                file.write(f"{alert_token}\n")
+        except OSError:
+            pass
 
     def _read_alert_token(self) -> str:
         try:
