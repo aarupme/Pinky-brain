@@ -34,7 +34,22 @@ on run argv
     activate
   end tell
 
-  delay 0.8
+  tell application "System Events"
+    set chatGPTReady to false
+    repeat 20 times
+      delay 0.1
+      if exists process "ChatGPT" then
+        if frontmost of process "ChatGPT" is true then
+          set chatGPTReady to true
+          exit repeat
+        end if
+      end if
+    end repeat
+  end tell
+
+  if chatGPTReady is false then
+    error "ChatGPT did not become frontmost; refusing to paste callback"
+  end if
 
   set oldClipboard to the clipboard
   set the clipboard to messageText
