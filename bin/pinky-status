@@ -59,6 +59,11 @@ else
   printf 'git=clean\n'
 fi
 
+printf '\n%s\n' '--- protocol ---'
+printf 'startup-chat=compact\n'
+printf 'protocol-source=terminal:pinky-protocol\n'
+printf 'start-prompt=prompts/runtime-start.txt\n'
+
 printf '\n%s\n' '--- runtime ---'
 pid_status "loop" "$LOOP_PID"
 pid_status "beacon" "$BEACON_PID"
