@@ -6,6 +6,11 @@ expected="${2:?expected command required}"
 reader="$ROOT_DIR/.run/test-pinky-read-visible-command"
 out="$ROOT_DIR/.run/test-command-extract-output"
 mkdir -p "$ROOT_DIR/.run"
+cleanup() {
+  rm -f "$ROOT_DIR/.run/pinky-command.last-hash" "$ROOT_DIR/.run/pinky-command.candidate"
+}
+trap cleanup EXIT
+rm -f "$ROOT_DIR/.run/pinky-command.last-hash" "$ROOT_DIR/.run/pinky-command.candidate"
 printf "#!/usr/bin/env bash
 cat \"%s\"
 " "$ROOT_DIR/tests/fixtures/$fixture" > "$reader"
