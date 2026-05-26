@@ -68,6 +68,7 @@ class PinkyBeacon:
 
         self.state_index = 0
         self.current_state_key = None
+        self.brain_alert_latched = False
         self.sound_brain_path = os.path.join(os.path.dirname(__file__), "pinky-sound-brain")
         self.beacon_state_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".run", "pinky-beacon.state")
 
@@ -187,7 +188,11 @@ class PinkyBeacon:
         self._draw_panel(STATES[state_key])
 
         if state_key == "brain" and previous_state_key != "brain":
-            self._play_brain_sound()
+            if not self.brain_alert_latched:
+                self._play_brain_sound()
+                self.brain_alert_latched = True
+        elif state_key in {"pinky", "toolbox", "executing", "done", "blocked", "paused", "stopped"}:
+            self.brain_alert_latched = False
 
     def _poll_state_file(self) -> None:
         try:
