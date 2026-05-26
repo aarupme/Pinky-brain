@@ -4,6 +4,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 START_PROMPT="$ROOT_DIR/prompts/runtime-start.txt"
 STOP_PROMPT="$ROOT_DIR/prompts/runtime-stop.txt"
+LOG_DIR="$ROOT_DIR/logs"
+SEND_LOG="$LOG_DIR/pinky-send.log"
+mkdir -p "$LOG_DIR"
 
 usage() {
   cat <<'EOF'
@@ -26,6 +29,9 @@ send_text() {
 
   [[ -n "$message" ]] || fail "message is empty"
 
+  printf "%s send=attempt bytes=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "${#message}" >> "$SEND_LOG"
+
+  set +e
   osascript - "$message" <<'APPLESCRIPT'
 on run argv
   set messageText to item 1 of argv
@@ -64,6 +70,14 @@ on run argv
   set the clipboard to oldClipboard
 end run
 APPLESCRIPT
+  local send_exit="$?"
+  set -e
+  if [[ "$send_exit" -eq 0 ]]; then
+    printf "%s send=success\\n" "$(date '+%Y-%m-%d %H:%M:%S')" >> "$SEND_LOG"
+  else
+    printf "%s send=failed exit_code=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$send_exit" >> "$SEND_LOG"
+    return "$send_exit"
+  fi
 }
 
 send_file() {
