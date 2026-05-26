@@ -51,6 +51,7 @@ loop_once() {
     set -e
     if [[ "$extract_exit" -eq 0 ]]; then
       "$ROOT_DIR/bin/pinky-command-run" >> "$LOG_FILE" 2>&1 || true
+      "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
       echo "loop=command-checked"
       return 0
     fi
