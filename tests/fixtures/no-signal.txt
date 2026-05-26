@@ -1,0 +1,3 @@
+text
+text
+assistant body without control signal

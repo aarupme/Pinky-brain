@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
+tests/pinky-detect-signal-fixture standalone-pinky.txt pinky
+tests/pinky-detect-signal-fixture standalone-brain.txt brain
+tests/pinky-detect-signal-fixture standalone-stop.txt stop
+tests/pinky-detect-signal-fixture prefix-prose-brain-nonmatch.txt none
+tests/pinky-detect-signal-fixture no-signal.txt none
+tests/pinky-detect-signal-fixture same-coordinate-pinky-a.txt pinky
+tests/pinky-detect-signal-fixture same-coordinate-pinky-b.txt pinky
