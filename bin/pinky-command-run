@@ -30,7 +30,9 @@ run_timestamp="$(date "+%Y%m%d-%H%M%S")"
 output_file="$OUTPUT_DIR/$run_timestamp-$candidate_hash.log"
 "$ROOT_DIR/bin/pinky-set-state" executing >/dev/null 2>&1 || true
 set +e
-osascript - "$command_text" <<'APPLESCRIPT' > "$output_file" 2>&1
+visible_command="{ $command_text; command_exit=\$?; \"$ROOT_DIR/bin/pinky-set-state\" watching >/dev/null 2>&1 || true; printf \"\\n--- report ---\\n\"; \"$ROOT_DIR/bin/pinky-cockpit\"; printf \"\\ncommand_exit=%s\\n\" \"\$command_exit\"; }"
+
+osascript - "$visible_command" <<'APPLESCRIPT' > "$output_file" 2>&1
 on run argv
   set commandText to item 1 of argv
   tell application "Terminal"
