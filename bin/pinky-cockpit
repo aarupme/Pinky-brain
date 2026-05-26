@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+LOG_DIR="$ROOT_DIR/logs"
+STATE_FILE="$RUN_DIR/pinky-beacon.state"
+LOOP_PID="$RUN_DIR/pinky-loop.pid"
+BEACON_PID="$RUN_DIR/pinky-beacon.pid"
+LOOP_STOP="$RUN_DIR/pinky-loop.stop"
+COMMAND_CANDIDATE="$RUN_DIR/pinky-command.candidate"
+
+supports_color=0
+if [[ -t 1 ]] && command -v tput >/dev/null 2>&1; then
+  colors="$(tput colors 2>/dev/null || echo 0)"
+  if [[ "$colors" =~ ^[0-9]+$ ]] && (( colors >= 8 )); then
+    supports_color=1
+  fi
+fi
+
+paint() {
+  local code="$1"
+  local text="$2"
+  if (( supports_color )); then
+    printf "\033[%sm%s\033[0m" "$code" "$text"
+  else
+    printf "%s" "$text"
+  fi
+}
+
+pid_running() {
+  local file="$1"
+  [[ -s "$file" ]] || return 1
+  local pid
+  pid="$(cat "$file" 2>/dev/null || true)"
+  [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$pid" >/dev/null 2>&1
+}
+
+status_dot() {
+  local state="$1"
+  case "$state" in
+    ok|running|clean|watching|done) paint "32" "●" ;;
+    warn|dirty|candidate|paused|blocked) paint "33" "●" ;;
+    bad|stopped|absent) paint "31" "●" ;;
+    *) paint "37" "●" ;;
+  esac
+}
+
+check_mark() {
+  local state="$1"
+  case "$state" in
+    ok|running|clean|watching|done) paint "32" "✓" ;;
+    warn|dirty|candidate|paused|blocked) paint "33" "!" ;;
+    bad|stopped|absent) paint "31" "x" ;;
+    *) paint "37" "?" ;;
+  esac
+}
+
+state="unknown"
+[[ -s "$STATE_FILE" ]] && state="$(head -n 1 "$STATE_FILE" 2>/dev/null || echo unknown)"
+
+if pid_running "$LOOP_PID"; then loop="running"; else loop="stopped"; fi
+if pid_running "$BEACON_PID"; then beacon="running"; else beacon="stopped"; fi
+if [[ -e "$LOOP_STOP" ]]; then stop="present"; else stop="absent"; fi
+if [[ -s "$COMMAND_CANDIDATE" ]]; then candidate="present"; else candidate="none"; fi
+if [[ -n "$(git -C "$ROOT_DIR" status --short 2>/dev/null)" ]]; then git_state="dirty"; else git_state="clean"; fi
+
+printf "Pinky cockpit  "
+status_dot "$state"; printf " state=%s  " "$state"
+status_dot "$loop"; printf " loop=%s  " "$loop"
+status_dot "$beacon"; printf " beacon=%s  " "$beacon"
+if [[ "$candidate" == "present" ]]; then status_dot candidate; else status_dot ok; fi
+printf " candidate=%s  " "$candidate"
+if [[ "$stop" == "present" ]]; then status_dot warn; else status_dot ok; fi
+printf " stop=%s  " "$stop"
+status_dot "$git_state"; printf " git=%s  " "$git_state"
+check_mark "$git_state"; printf "\n"

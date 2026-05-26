@@ -48,6 +48,8 @@ log_tail() {
   fi
 }
 
+"$ROOT_DIR/bin/pinky-cockpit"
+printf '\n'
 printf '== Pinky Status ==\n'
 printf 'root=%s\n\n' "$ROOT_DIR"
 
