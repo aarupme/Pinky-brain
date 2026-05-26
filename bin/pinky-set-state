@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-STATE_DIR="$ROOT_DIR/.run"
+STATE_DIR="${PINKY_STATE_DIR:-$ROOT_DIR/.run}"
 BEACON_STATE_FILE="$STATE_DIR/pinky-beacon.state"
 BEACON_ALERT_FILE="$STATE_DIR/pinky-beacon.alert"
 
