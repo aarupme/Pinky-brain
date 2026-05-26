@@ -63,7 +63,6 @@ loop_once() {
       printf "%s command=duplicate candidate_hash=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$duplicate_hash" >> "$LOG_FILE"
       if [[ "$duplicate_hash" != "$last_duplicate_hash" ]]; then
         printf "%s" "$duplicate_hash" > "$COMMAND_DUPLICATE_HASH_FILE"
-        "$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE duplicate $duplicate_hash" >/dev/null 2>&1 || true
         echo "loop=command-duplicate-callback"
       else
         echo "loop=command-duplicate-suppressed"
