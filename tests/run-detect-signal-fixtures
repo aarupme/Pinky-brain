@@ -9,3 +9,4 @@ tests/pinky-detect-signal-fixture prefix-prose-brain-nonmatch.txt none
 tests/pinky-detect-signal-fixture no-signal.txt none
 tests/pinky-detect-signal-fixture same-coordinate-pinky-a.txt pinky
 tests/pinky-detect-signal-fixture same-coordinate-pinky-b.txt pinky
+tests/pinky-detect-signal-fixture brain-manual-command-nonmatch.txt none

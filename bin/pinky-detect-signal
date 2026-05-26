@@ -42,7 +42,13 @@ while IFS= read -r line; do
   cleaned="$(printf "%s" "$line" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
   case "$cleaned" in
     "🐭") latest_signal="pinky"; latest_line_no="$line_no" ;;
-    "🧠"|"<0001f9e0>") latest_signal="brain"; latest_line_no="$line_no" ;;
+    "🧠"|"<0001f9e0>")
+      next_meaningful="$(awk -v start="$line_no" 'NR > start { gsub(/^[[:space:]]+|[[:space:]]+$/, ""); if ($0 != "") { print; exit } }' "$TMP_FILE")"
+      case "$next_meaningful" in
+        \`\`\`*) ;;
+        *) latest_signal="brain"; latest_line_no="$line_no" ;;
+      esac
+      ;;
     "🛑") latest_signal="stop"; latest_line_no="$line_no" ;;
   esac
 done < "$TMP_FILE"
