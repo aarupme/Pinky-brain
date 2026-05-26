@@ -1,0 +1,6 @@
+text
+text
+🧠
+
+Manual instruction text.
+cd ~/Desktop/pinky-brain && ./bin/pinky-status
