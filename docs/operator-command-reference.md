@@ -19,6 +19,7 @@ Pinky Brain is a supervised local runtime. It must preserve manual control and m
 | `./bin/pinky-mode help` | Show mode commands | Read-only help output. |
 | `./bin/pinky-status` | Read-only dashboard | Shows git cleanliness, loop/beacon state, command candidate/dry-run state, latest signal state, and compact log tails. |
 | `./bin/pinky-protocol` | Read-only protocol contract | Prints the current Brain/user Terminal lane, Pinky toolbox lane, continuation lane, standalone signal rule, and command execution rule. |
+| `./bin/pinky-self-test` | Read-only diagnostic test | Runs Pinky status and detector fixtures, then reports a pass/fail diagnostic checkpoint. |
 
 ## Conversation protocol
 
