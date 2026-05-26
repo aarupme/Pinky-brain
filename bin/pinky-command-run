@@ -6,10 +6,12 @@ LAST_HASH_FILE="$ROOT_DIR/.run/pinky-command.last-hash"
 LOG_FILE="$ROOT_DIR/logs/pinky-command-run.log"
 OUTPUT_DIR="$ROOT_DIR/logs/command-runs"
 mkdir -p "$ROOT_DIR/logs" "$OUTPUT_DIR"
+"$ROOT_DIR/bin/pinky-set-state" toolbox >/dev/null 2>&1 || true
 classification_output="$("$ROOT_DIR/bin/pinky-command-classify")"
 classification="$(printf "%s\n" "$classification_output" | awk -F= "/^classification=/{print \$2; exit}")"
 reason="$(printf "%s\n" "$classification_output" | awk -F= "/^reason=/{print \$2; exit}")"
 if [[ "${classification:-none}" != "safe" ]]; then
+  "$ROOT_DIR/bin/pinky-set-state" blocked >/dev/null 2>&1 || true
   echo "executed=false"
   echo "classification=${classification:-none}"
   echo "reason=${reason:-not-safe}"
@@ -26,6 +28,7 @@ command_text="$(cat "$CANDIDATE_FILE")"
 candidate_hash="$(printf "%s" "$command_text" | shasum -a 256 | awk '{print $1}')"
 run_timestamp="$(date "+%Y%m%d-%H%M%S")"
 output_file="$OUTPUT_DIR/$run_timestamp-$candidate_hash.log"
+"$ROOT_DIR/bin/pinky-set-state" executing >/dev/null 2>&1 || true
 set +e
 osascript - "$command_text" <<'APPLESCRIPT' > "$output_file" 2>&1
 on run argv
@@ -42,6 +45,7 @@ printf "%s executing=%s reason=%s candidate_hash=%s exit_code=%s output_file=%s 
 printf "%s\n" "$candidate_hash" > "$LAST_HASH_FILE"
 rm -f "$CANDIDATE_FILE"
 "$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE $candidate_hash" >/dev/null 2>&1 || true
+"$ROOT_DIR/bin/pinky-set-state" done >/dev/null 2>&1 || true
 cat "$output_file"
 echo "executed=true"
 echo "classification=safe"

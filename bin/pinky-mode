@@ -19,12 +19,14 @@ case "${1:-}" in
   on)
     "$ROOT_DIR/bin/pinky-layout"
     "$ROOT_DIR/bin/pinky-beacon-start"
+    "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
     "$ROOT_DIR/bin/pinky-loop" start
     "$ROOT_DIR/bin/pinky-send" --start
     echo "Pinky Brain mode ON"
     ;;
   off)
     "$ROOT_DIR/bin/pinky-kill"
+    "$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null 2>&1 || true
     "$ROOT_DIR/bin/pinky-beacon-stop"
     "$ROOT_DIR/bin/pinky-send" --stop
     echo "Pinky Brain mode OFF"
@@ -34,6 +36,7 @@ case "${1:-}" in
     ;;
   k|K|kill)
     "$ROOT_DIR/bin/pinky-kill"
+    "$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null 2>&1 || true
     ;;
   help|--help|-h)
     usage

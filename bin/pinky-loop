@@ -9,6 +9,7 @@ PID_FILE="$RUN_DIR/pinky-loop.pid"
 LOG_FILE="$LOG_DIR/pinky-loop.log"
 LAST_HASH_FILE="$RUN_DIR/pinky-loop.last-hash"
 LAST_SEND_FILE="$RUN_DIR/pinky-loop.last-send"
+COMMAND_DUPLICATE_HASH_FILE="$RUN_DIR/pinky-command.duplicate-last-hash"
 
 mkdir -p "$RUN_DIR" "$LOG_DIR"
 
@@ -56,9 +57,19 @@ loop_once() {
     if [[ "$extract_exit" -eq 3 ]]; then
       duplicate_hash="$(printf "%s\\n" "$extract_output" | awk -F= '/^candidate_hash=/{print $2; exit}')"
       [[ -n "${duplicate_hash:-}" ]] || duplicate_hash="duplicate"
+      last_duplicate_hash=""
+      [[ -f "$COMMAND_DUPLICATE_HASH_FILE" ]] && last_duplicate_hash="$(cat "$COMMAND_DUPLICATE_HASH_FILE" || true)"
+      "$ROOT_DIR/bin/pinky-set-state" duplicate >/dev/null 2>&1 || true
       printf "%s command=duplicate candidate_hash=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$duplicate_hash" >> "$LOG_FILE"
-      "$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE duplicate $duplicate_hash" >/dev/null 2>&1 || true
-      echo "loop=command-duplicate-callback"
+      if [[ "$duplicate_hash" != "$last_duplicate_hash" ]]; then
+        printf "%s" "$duplicate_hash" > "$COMMAND_DUPLICATE_HASH_FILE"
+        "$ROOT_DIR/bin/pinky-send" --text "PINKY-DONE duplicate $duplicate_hash" >/dev/null 2>&1 || true
+        echo "loop=command-duplicate-callback"
+      else
+        echo "loop=command-duplicate-suppressed"
+      fi
+      sleep 1
+      "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
       return 0
     fi
   fi
@@ -84,6 +95,7 @@ loop_once() {
     elapsed=$((elapsed + 1))
   done
 
+  "$ROOT_DIR/bin/pinky-set-state" reading >/dev/null 2>&1 || true
   signal_output="$(cat "$tmp_output" || true)"
   rm -f "$tmp_output"
   signal="$(printf "%s\n" "$signal_output" | awk -F= '/^signal=/{print $2; exit}')"
@@ -103,6 +115,7 @@ loop_once() {
 
   case "$signal" in
     brain)
+      "$ROOT_DIR/bin/pinky-set-state" brain >/dev/null 2>&1 || true
       echo "loop=brain-needed"
       ;;
     stop)
@@ -116,7 +129,10 @@ loop_once() {
       [[ -f "$LAST_HASH_FILE" ]] && last_hash="$(cat "$LAST_HASH_FILE" || true)"
 
       if [[ "$hash" == "$last_hash" ]]; then
+        "$ROOT_DIR/bin/pinky-set-state" duplicate >/dev/null 2>&1 || true
         printf "%s autosend=skipped reason=same-hash hash=%s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$hash" >> "$LOG_FILE"
+        sleep 1
+        "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
         echo "loop=pinky-skipped-same-message"
         return 0
       fi
@@ -134,6 +150,7 @@ loop_once() {
       echo "loop=pinky-autosent-narf"
       ;;
     none)
+      "$ROOT_DIR/bin/pinky-set-state" watching >/dev/null 2>&1 || true
       echo "loop=watching"
       ;;
   esac

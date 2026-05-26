@@ -11,8 +11,15 @@ usage() {
   cat <<'EOF'
 Usage:
   pinky-set-state idle
+  pinky-set-state watching
+  pinky-set-state reading
   pinky-set-state pinky
   pinky-set-state brain
+  pinky-set-state toolbox
+  pinky-set-state executing
+  pinky-set-state done
+  pinky-set-state duplicate
+  pinky-set-state blocked
   pinky-set-state paused
   pinky-set-state stopped
 EOF
@@ -21,7 +28,7 @@ EOF
 state="${1:-}"
 
 case "$state" in
-  idle|pinky|brain|paused|stopped)
+  idle|watching|reading|pinky|brain|toolbox|executing|done|duplicate|blocked|paused|stopped)
     printf "%s\n" "$state" > "$BEACON_STATE_FILE"
     echo "beacon_state=$state"
     ;;

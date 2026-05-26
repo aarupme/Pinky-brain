@@ -18,14 +18,21 @@ class BeaconState:
 
 
 STATES = {
-    "idle": BeaconState("idle", "○", "Idle", "#6b7280", "#111827", "#d1d5db"),
-    "pinky": BeaconState("pinky", "🐭", "Pinky Active", "#22c55e", "#052e16", "#ecfdf5"),
+    "idle": BeaconState("idle", "💤", "Idle", "#6b7280", "#111827", "#d1d5db"),
+    "watching": BeaconState("watching", "👀", "Watching", "#38bdf8", "#071923", "#e0f2fe"),
+    "reading": BeaconState("reading", "📖", "Reading", "#60a5fa", "#0b1220", "#dbeafe"),
+    "pinky": BeaconState("pinky", "🐭", "Narf Ready", "#22c55e", "#052e16", "#ecfdf5"),
     "brain": BeaconState("brain", "🧠", "Brain Needed", "#8b5cf6", "#11102a", "#f5f3ff"),
+    "toolbox": BeaconState("toolbox", "🧰", "Toolbox", "#c084fc", "#1b1028", "#faf5ff"),
+    "executing": BeaconState("executing", "⚡", "Executing", "#facc15", "#221406", "#fefce8"),
+    "done": BeaconState("done", "✅", "Done", "#22c55e", "#052e16", "#ecfdf5"),
+    "duplicate": BeaconState("duplicate", "🔁", "Duplicate", "#fb923c", "#241300", "#ffedd5"),
+    "blocked": BeaconState("blocked", "🛑", "Blocked", "#ef4444", "#220707", "#fef2f2"),
     "paused": BeaconState("paused", "⏸", "Paused", "#f59e0b", "#221406", "#fffbeb"),
     "stopped": BeaconState("stopped", "🛑", "Stopped", "#ef4444", "#220707", "#fef2f2"),
 }
 
-STATE_ORDER = ["idle", "pinky", "brain", "paused", "stopped"]
+STATE_ORDER = ["idle", "watching", "reading", "pinky", "brain", "toolbox", "executing", "done", "duplicate", "blocked", "paused", "stopped"]
 
 
 class PinkyBeacon:
