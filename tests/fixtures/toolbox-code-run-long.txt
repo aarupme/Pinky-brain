@@ -1,0 +1,7 @@
+Assistant text ignored.
+
+PINKY-CODE-RUN
+
+```bash
+cd ~/Desktop/pinky-brain && printf "one\\n" && printf "two\\n" && ./bin/pinky-status
+```

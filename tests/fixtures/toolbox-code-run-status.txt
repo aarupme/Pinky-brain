@@ -1,0 +1,5 @@
+PINKY-CODE-RUN
+
+```bash
+cd ~/Desktop/pinky-brain && ./bin/pinky-status
+```
