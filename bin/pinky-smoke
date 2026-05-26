@@ -10,6 +10,21 @@ section() {
 
 cd "$ROOT_DIR"
 
+SOUND_MODE=0
+case "${1:-}" in
+  --sound) SOUND_MODE=1 ;;
+  "") ;;
+  help|--help|-h)
+    printf "Usage: pinky-smoke [--sound]\n"
+    exit 0
+    ;;
+  *)
+    printf "pinky-smoke error: unknown option: %s\n" "$1" >&2
+    printf "Usage: pinky-smoke [--sound]\n" >&2
+    exit 1
+    ;;
+esac
+
 "$ROOT_DIR/bin/pinky-cockpit"
 
 section "runtime"
@@ -40,6 +55,11 @@ section "fixtures"
 tests/run-detect-signal-fixtures
 tests/run-command-extract-fixtures
 printf "fixtures=pass\n"
+
+if (( SOUND_MODE )); then
+  section "sound"
+  "$ROOT_DIR/bin/pinky-sound-brain"
+fi
 
 section "recent logs"
 printf "%s\n" "--- pinky-loop.log ---"
