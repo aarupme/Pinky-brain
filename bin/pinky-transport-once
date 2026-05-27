@@ -32,8 +32,8 @@ if [[ "$syntax_code" != "0" ]]; then
   cat "$log.syntax"
   exit 2
 fi
-bash -lc "$cmd" > "$log" 2>&1
-exit_code="$?"
+bash -lc "$cmd" 2>&1 | head -c 200000 > "$log"
+exit_code="${PIPESTATUS[0]}"
 set -e
 
 tail -80 "$log"
