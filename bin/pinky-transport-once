@@ -22,6 +22,8 @@ log="$LOG_DIR/$(date "+%Y%m%d-%H%M%S")-$hash.log"
 printf "PINKY picked command:\n%s\n\n" "$cmd"
 printf "PINKY executing in Terminal...\n"
 
+"$ROOT_DIR/bin/pinky-preflight"
+
 set +e
 bash -n -c "$cmd" > "$log.syntax" 2>&1
 syntax_code="$?"
