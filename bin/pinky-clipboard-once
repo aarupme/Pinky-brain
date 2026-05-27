@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cmd="$(pbpaste)"
+[[ -n "${cmd//[[:space:]]/}" ]] || { printf "NARF failed=true reason=empty-clipboard\n"; exit 2; }
+printf "%s\n" "$cmd" > "$ROOT_DIR/.run/pinky-transport.input"
+"$ROOT_DIR/bin/pinky-transport-once"
