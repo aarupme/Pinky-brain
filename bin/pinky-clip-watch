@@ -5,10 +5,43 @@ RUN_DIR="$ROOT_DIR/.run"
 STOP_FILE="$RUN_DIR/pinky-clip-watch.stop"
 LAST_HASH_FILE="$RUN_DIR/pinky-clip-watch.last-hash"
 mkdir -p "$RUN_DIR"
+PID_FILE="$RUN_DIR/pinky-clip-watch.pid"
+LOG_FILE="$ROOT_DIR/logs/pinky-clip-watch.log"
+mkdir -p "$ROOT_DIR/logs"
+
 case "${1:-}" in
-  stop) touch "$STOP_FILE"; printf "PINKY-CLIP-WATCH stopped\n"; exit 0 ;;
-  status) if [[ -f "$STOP_FILE" ]]; then printf "PINKY-CLIP-WATCH state=stopped\n"; else printf "PINKY-CLIP-WATCH state=watching\n"; fi; exit 0 ;;
+  start)
+    if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" >/dev/null 2>&1; then
+      printf "PINKY-CLIP-WATCH state=already-running pid=%s log=%s\n" "$(cat "$PID_FILE")" "$LOG_FILE"
+      exit 0
+    fi
+    rm -f "$STOP_FILE"
+    nohup "$0" run > "$LOG_FILE" 2>&1 &
+    printf "%s\n" "$!" > "$PID_FILE"
+    printf "PINKY-CLIP-WATCH state=started pid=%s log=%s\n" "$!" "$LOG_FILE"
+    exit 0
+    ;;
+  stop)
+    touch "$STOP_FILE"
+    if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" >/dev/null 2>&1; then
+      kill "$(cat "$PID_FILE")" >/dev/null 2>&1 || true
+    fi
+    rm -f "$PID_FILE"
+    printf "PINKY-CLIP-WATCH state=stopped\n"
+    exit 0
+    ;;
+  status)
+    if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" >/dev/null 2>&1; then
+      printf "PINKY-CLIP-WATCH state=running pid=%s log=%s\n" "$(cat "$PID_FILE")" "$LOG_FILE"
+    else
+      printf "PINKY-CLIP-WATCH state=stopped\n"
+    fi
+    exit 0
+    ;;
+  run|"") ;;
+  *) printf "usage: pinky-clip-watch start|stop|status|run\n" >&2; exit 2 ;;
 esac
+
 rm -f "$STOP_FILE"
 printf "PINKY-CLIP-WATCH state=watching\n"
 while [[ ! -f "$STOP_FILE" ]]; do
