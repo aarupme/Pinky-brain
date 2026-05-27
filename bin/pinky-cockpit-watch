@@ -6,6 +6,12 @@ RUN_DIR="$ROOT_DIR/.run"
 LAST_SUCCESS_HASH_FILE="$RUN_DIR/pinky-cockpit-watch.last-success-hash"
 LAST_ATTEMPT_HASH_FILE="$RUN_DIR/pinky-cockpit-watch.last-attempt-hash"
 SLEEP_SECONDS="${PINKY_SLEEP_SECONDS:-1}"
+LOCK_DIR="$RUN_DIR/pinky-cockpit-watch.lock"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  echo "PINKY cockpit refused: already running"
+  exit 23
+fi
+trap 'rmdir "$LOCK_DIR"' EXIT
 
 "$ROOT_DIR/bin/pinky-preflight"
 mkdir -p "$RUN_DIR"
