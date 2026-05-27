@@ -96,3 +96,25 @@ Current safe allowlist is intentionally narrow and limited to local read-only st
 - Transport execution requires preflight and syntax check before bash execution.
 - Cockpit watcher requires preflight at startup and before each execution.
 - Logs must remain below preflight threshold before Pinky can run.
+
+## Pinky v2 command envelope
+
+Pinky v2 must not execute suffix-only commands.
+
+Required visible command envelope:
+
+PINKY-BASH-START
+cd ~/Desktop/pinky-brain && <safe command>
+PINKY-BASH-END
+
+Rules:
+- Start marker and end marker are both required.
+- Extract only the newest complete envelope.
+- Ignore incomplete envelopes.
+- Ignore quoted examples inside docs or shell strings.
+- Retire suffix-only `# pinky` as active execution syntax.
+- Keep Brain/Pinky binary lane separation.
+- No hidden or background loops as the primary UX.
+- Every completed Pinky execution must send `Narf!` back to ChatGPT.
+- Every transport execution must pass preflight and syntax checks first.
+- Output and logs must be bounded before Pinky can run again.
