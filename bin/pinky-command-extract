@@ -75,6 +75,8 @@ blocked = (
 for candidate in reversed(pattern.findall(text)):
     clean = candidate.strip()
     command_body = clean.split("&&", 1)[1].rsplit("#", 1)[0].strip()
+    if chr(39) in clean or chr(34) in clean:
+        continue
     if any(token in clean for token in blocked):
         continue
     if command_body.startswith("<") or command_body.endswith(">"):
