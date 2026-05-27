@@ -87,3 +87,12 @@ Current safe allowlist is intentionally narrow and limited to local read-only st
 - Use ./bin/pinky-cockpit-status for read-only cockpit health checks.
 - Do not send inspection, git, sed, or docs commands through the Pinky automatic lane.
 - Pinky automatic lane is for simple visible execution payloads ending in # pinky.
+
+## Safety checkpoint
+
+- Pinky remains stopped after emergency log containment.
+- Active executable surface is limited to guarded cockpit/status/extract/read/send/transport/preflight helpers.
+- Legacy/background/clipboard/direct/beacon/control wrappers are non-executable.
+- Transport execution requires preflight and syntax check before bash execution.
+- Cockpit watcher requires preflight at startup and before each execution.
+- Logs must remain below preflight threshold before Pinky can run.
