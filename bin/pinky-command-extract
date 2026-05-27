@@ -14,81 +14,48 @@ READ_VISIBLE="${PINKY_READ_VISIBLE:-$ROOT_DIR/bin/pinky-read-visible}"
 }
 rm -f "$CANDIDATE_FILE"
 
-code_command="$(python3 - "$TMP_FILE" <<'PY'
+envelope_command="$(python3 - "$TMP_FILE" <<'PY'
 import sys
 
 path = sys.argv[1]
 text = open(path, "r", encoding="utf-8", errors="replace").read()
-marker = "PINKY-CODE-RUN"
-fence = chr(96) * 3
-idx = text.rfind(marker)
-marker_seen = idx >= 0
-if idx >= 0:
-    tail = text[idx + len(marker):]
-    start = tail.find(fence)
-    if start >= 0:
-        after = tail[start + len(fence):]
-        newline = after.find("\n")
-        if newline >= 0:
-            body_start = newline + 1
-            end = after.find(fence, body_start)
-            if end >= 0:
-                payload = after[body_start:end].strip()
-                if payload:
-                    print(payload)
-                    raise SystemExit(0)
-if marker_seen:
-    print("__PINKY_CODE_MARKER_INVALID__")
-raise SystemExit(2)
+start_marker = "PINKY-BASH-START"
+end_marker = "PINKY-BASH-END"
+start = text.rfind(start_marker)
+if start < 0:
+    raise SystemExit(2)
+after = text[start + len(start_marker):]
+end = after.find(end_marker)
+if end < 0:
+    print("__PINKY_ENVELOPE_INCOMPLETE__")
+    raise SystemExit(0)
+payload = after[:end].strip()
+if not payload:
+    print("__PINKY_ENVELOPE_EMPTY__")
+    raise SystemExit(0)
+if "PINKY-BASH-START" in payload or "PINKY-BASH-END" in payload:
+    print("__PINKY_ENVELOPE_NESTED__")
+    raise SystemExit(0)
+print(payload)
 PY
 )" || true
 
-if [[ "${code_command:-}" == "__PINKY_CODE_MARKER_INVALID__" ]]; then
-  echo "pinky_command=rejected"
-  echo "source=code-block"
-  echo "reason=code-marker-without-valid-block"
-  rm -f "$CANDIDATE_FILE"
-  exit 4
-fi
+case "${envelope_command:-}" in
+  "__PINKY_ENVELOPE_INCOMPLETE__"|"__PINKY_ENVELOPE_EMPTY__"|"__PINKY_ENVELOPE_NESTED__")
+    echo "pinky_command=rejected"
+    echo "source=envelope"
+    echo "reason=${envelope_command#__PINKY_}"
+    rm -f "$CANDIDATE_FILE"
+    exit 4
+    ;;
+esac
 
-if [[ -n "${code_command:-}" ]]; then
-  printf "%s\n" "$code_command" | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE"
+if [[ -n "${envelope_command:-}" ]]; then
+  printf "%s\n" "$envelope_command" | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE"
 else
-  python3 - "$TMP_FILE" <<'PY' | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE" || true
-import re
-import sys
-text = open(sys.argv[1], "r", encoding="utf-8", errors="replace").read()
-pattern = re.compile(r"cd\s+~/Desktop/pinky-brain\s+&&\s+[^\n`]+?#\s*pinky")
-blocked = (
-    "pinky-command-extract",
-    "pinky-read-visible",
-    "pinky-visible-line-once",
-    "pinky-chatgpt-once",
-    "pinky-direct-watch",
-    "pinky-cockpit-watch",
-    "pinky-transport",
-    "pinky-protocol",
-    "sed -n",
-    "git --no-pager",
-    "<command>",
-)
-for candidate in reversed(pattern.findall(text)):
-    clean = candidate.strip()
-    command_body = clean.split("&&", 1)[1].rsplit("#", 1)[0].strip()
-    if chr(39) in clean or chr(34) in clean:
-        continue
-    if any(token in clean for token in blocked):
-        continue
-    if command_body.startswith("<") or command_body.endswith(">"):
-        continue
-    if clean.count("# pinky") != 1:
-        continue
-    if "&&" not in clean:
-        continue
-    print(clean)
-    raise SystemExit(0)
-raise SystemExit(2)
-PY
+  rm -f "$CANDIDATE_FILE"
+  echo "pinky_command=none"
+  exit 2
 fi
 
 if [[ -s "$CANDIDATE_FILE" ]]; then
@@ -106,9 +73,9 @@ if [[ -s "$CANDIDATE_FILE" ]]; then
   fi
   echo "pinky_command=present"
   if [[ -n "${code_command:-}" ]]; then
-    echo "source=code-block"
+    echo "source=envelope"
   else
-    echo "source=toolbox"
+    echo "source=envelope"
   fi
   echo "candidate_file=$CANDIDATE_FILE"
 else
