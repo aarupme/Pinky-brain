@@ -14,7 +14,7 @@ case "${1:-status}" in
       exit 0
     fi
     rm -f "$STOP_FILE"
-    PINKY_MAX_RUNS=999999 PINKY_SLEEP_SECONDS=1 nohup "$ROOT_DIR/bin/pinky-clipboard-watch" > "$LOG_FILE" 2>&1 &
+    PINKY_MAX_RUNS=999999 PINKY_SLEEP_SECONDS=1 nohup "$ROOT_DIR/bin/pinky-direct-watch" > "$LOG_FILE" 2>&1 &
     printf "%s\n" "$!" > "$PID_FILE"
     printf "PINKY-TRANSPORT state=started pid=%s log=%s\n" "$!" "$LOG_FILE"
     ;;
