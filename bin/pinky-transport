@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+LOG_DIR="$ROOT_DIR/logs"
+PID_FILE="$RUN_DIR/pinky-transport.pid"
+STOP_FILE="$RUN_DIR/pinky-transport.stop"
+LOG_FILE="$LOG_DIR/pinky-transport.log"
+mkdir -p "$RUN_DIR" "$LOG_DIR"
+case "${1:-status}" in
+  start)
+    if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" >/dev/null 2>&1; then
+      printf "PINKY-TRANSPORT state=running pid=%s log=%s\n" "$(cat "$PID_FILE")" "$LOG_FILE"
+      exit 0
+    fi
+    rm -f "$STOP_FILE"
+    PINKY_MAX_RUNS=999999 PINKY_SLEEP_SECONDS=1 nohup "$ROOT_DIR/bin/pinky-clipboard-watch" > "$LOG_FILE" 2>&1 &
+    printf "%s\n" "$!" > "$PID_FILE"
+    printf "PINKY-TRANSPORT state=started pid=%s log=%s\n" "$!" "$LOG_FILE"
+    ;;
+  stop)
+    touch "$STOP_FILE"
+    if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" >/dev/null 2>&1; then kill "$(cat "$PID_FILE")" >/dev/null 2>&1 || true; fi
+    rm -f "$PID_FILE"
+    printf "PINKY-TRANSPORT state=stopped\n"
+    ;;
+  status)
+    if [[ -f "$PID_FILE" ]] && kill -0 "$(cat "$PID_FILE")" >/dev/null 2>&1; then printf "PINKY-TRANSPORT state=running pid=%s log=%s\n" "$(cat "$PID_FILE")" "$LOG_FILE"; else printf "PINKY-TRANSPORT state=stopped\n"; fi
+    ;;
+  *)
+    printf "usage: pinky-transport start|stop|status\n" >&2
+    exit 2
+    ;;
+esac
