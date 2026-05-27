@@ -11,6 +11,8 @@ SLEEP_SECONDS="${PINKY_SLEEP_SECONDS:-1}"
 mkdir -p "$RUN_DIR"
 
 printf "PINKY cockpit state=watching\n"
+printf "Narf!" > "$RUN_DIR/pinky-narf.txt"
+"$ROOT_DIR/bin/pinky-send" --file "$RUN_DIR/pinky-narf.txt"
 
 max_cycles="${PINKY_MAX_CYCLES:-0}"
 cycle=0
