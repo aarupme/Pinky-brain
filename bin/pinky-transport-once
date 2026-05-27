@@ -23,6 +23,13 @@ printf "PINKY picked command:\n%s\n\n" "$cmd"
 printf "PINKY executing in Terminal...\n"
 
 set +e
+bash -n -c "$cmd" > "$log.syntax" 2>&1
+syntax_code="$?"
+if [[ "$syntax_code" != "0" ]]; then
+  printf "Narf! failed=true reason=syntax-check-failed\n"
+  cat "$log.syntax"
+  exit 2
+fi
 bash -lc "$cmd" > "$log" 2>&1
 exit_code="$?"
 set -e
