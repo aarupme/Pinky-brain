@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+STOP_FILE="$RUN_DIR/pinky-clip-watch.stop"
+LAST_HASH_FILE="$RUN_DIR/pinky-clip-watch.last-hash"
+mkdir -p "$RUN_DIR"
+case "${1:-}" in
+  stop) touch "$STOP_FILE"; printf "PINKY-CLIP-WATCH stopped\n"; exit 0 ;;
+  status) if [[ -f "$STOP_FILE" ]]; then printf "PINKY-CLIP-WATCH state=stopped\n"; else printf "PINKY-CLIP-WATCH state=watching\n"; fi; exit 0 ;;
+esac
+rm -f "$STOP_FILE"
+printf "PINKY-CLIP-WATCH state=watching\n"
+while [[ ! -f "$STOP_FILE" ]]; do
+  command_text="$(pbpaste || true)"
+  if [[ -n "${command_text//[[:space:]]/}" ]]; then
+    hash="$(printf "%s" "$command_text" | shasum -a 256 | awk "{print \$1}")"
+    last_hash=""
+    [[ -f "$LAST_HASH_FILE" ]] && last_hash="$(cat "$LAST_HASH_FILE")"
+    if [[ "$hash" != "$last_hash" ]]; then
+      case "$command_text" in
+        cd\ ~/Desktop/pinky-brain*|cd\ "$HOME/Desktop/pinky-brain"*|cd\ /Users/*/Desktop/pinky-brain*)
+          printf "%s\n" "$hash" > "$LAST_HASH_FILE"
+          printf "%s\n" "$command_text" > "$RUN_DIR/pinky-courier.command"
+          "$ROOT_DIR/bin/pinky-courier" || true
+          ;;
+      esac
+    fi
+  fi
+  sleep 1
+done
+printf "PINKY-CLIP-WATCH exited\n"
