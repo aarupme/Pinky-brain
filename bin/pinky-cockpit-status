@@ -9,10 +9,10 @@ echo "--- latest commit ---"
 git --no-pager log --oneline -1
 echo
 echo "--- latest transport log ---"
-ls -t logs/transport-runs/*.log 2>/dev/null | head -1 || true
+ls -t logs/transport-runs/*.log 2>/dev/null | head -2 | tail -1 || true
 echo
 echo "--- latest transport output ---"
-latest=$(ls -t logs/transport-runs/*.log 2>/dev/null | head -1 || true)
+latest=$(ls -t logs/transport-runs/*.log 2>/dev/null | head -2 | tail -1 || true)
 if [[ -n "$latest" ]]; then cat "$latest"; else echo "no transport logs"; fi
 echo
 echo "--- send callback tail ---"
