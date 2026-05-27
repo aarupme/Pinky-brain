@@ -19,11 +19,19 @@ Status: ACTIVE
 - pinky-mode k = local kill alias
 - pinky-mode kill = local kill alias
 
-## Runnable command markers
+## Primary automatic lane
 
-- 🧰 PINKY-RUN = command block is intended for Pinky
-- 🧰 PINKY-READY = command block is complete and ready to extract
+- The active Pinky automatic lane is visible direct syntax only:
+  `cd ~/Desktop/pinky-brain && <safe command> # pinky`
+- Pinky must show the picked command in Terminal before execution.
+- Pinky must show execution output in Terminal.
+- Pinky must print `Narf!` after execution.
+
+## Secondary / legacy command markers
+
+- 🧰 PINKY-RUN = legacy command block marker.
+- 🧰 PINKY-READY = legacy command-ready marker.
 
 ## Rule
 
-Pinky must not extract or run a command unless both command markers are visible and the classifier returns safe.
+The cockpit watcher is the primary user-facing path. Hidden/background service and toolbox marker paths are secondary until explicitly reactivated.

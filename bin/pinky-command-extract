@@ -58,12 +58,33 @@ else
 import re
 import sys
 text = open(sys.argv[1], "r", encoding="utf-8", errors="replace").read()
-pattern = re.compile(r"cd\s+~/Desktop/pinky-brain\s+&&\s+.+?#\s*pinky")
-blocked = ("pinky-command-extract", "pinky-read-visible", "pinky-visible-line-once", "pinky-chatgpt-once")
+pattern = re.compile(r"cd\s+~/Desktop/pinky-brain\s+&&\s+[^\n`]+?#\s*pinky")
+blocked = (
+    "pinky-command-extract",
+    "pinky-read-visible",
+    "pinky-visible-line-once",
+    "pinky-chatgpt-once",
+    "pinky-direct-watch",
+    "pinky-cockpit-watch",
+    "pinky-transport",
+    "pinky-protocol",
+    "sed -n",
+    "git --no-pager",
+    "<command>",
+)
 for candidate in reversed(pattern.findall(text)):
-    if not any(token in candidate for token in blocked):
-        print(candidate)
-        raise SystemExit(0)
+    clean = candidate.strip()
+    command_body = clean.split("&&", 1)[1].rsplit("#", 1)[0].strip()
+    if any(token in clean for token in blocked):
+        continue
+    if command_body.startswith("<") or command_body.endswith(">"):
+        continue
+    if clean.count("# pinky") != 1:
+        continue
+    if "&&" not in clean:
+        continue
+    print(clean)
+    raise SystemExit(0)
 raise SystemExit(2)
 PY
 fi

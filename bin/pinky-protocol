@@ -6,7 +6,7 @@ Pinky Brain Protocol Contract
 
 Runtime lanes:
 - Brain/user Terminal lane: manual commands shown after the brain symbol.
-- Pinky toolbox lane: runnable commands only between toolbox RUN and READY markers.
+- Pinky automatic lane: visible direct syntax ending in # pinky.
 - Conversation continuation lane: standalone continuation signal only.
 
 Standalone control signals:
@@ -22,7 +22,7 @@ Strict signal rule:
 - Do not patch Pinky to compensate for inconsistent assistant formatting unless the protocol is intentionally redesigned and fixture-tested.
 
 Command execution rule:
-- Pinky executes only project-prefixed commands exposed in the toolbox command lane.
+- Pinky cockpit executes only project-prefixed visible direct commands ending in # pinky.
 - Human/manual commands belong in the Brain/user Terminal lane.
 - High-impact actions require brain review.
 

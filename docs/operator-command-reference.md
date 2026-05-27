@@ -33,23 +33,21 @@ Pinky Brain is a supervised local runtime. It must preserve manual control and m
 
 ## Command candidate flow
 
-Pinky command execution is deliberately gated.
+Pinky cockpit execution is the primary user-facing path.
 
-1. The assistant may expose a candidate command only inside the command marker protocol.
-2. `./bin/pinky-command-detect` checks whether a runnable marker is visible.
-3. `./bin/pinky-command-extract` extracts a project-prefixed candidate into `.run/pinky-command.candidate`.
-4. `./bin/pinky-command-dry-run` classifies the candidate without executing it.
-5. `./bin/pinky-command-run` executes only candidates classified as safe.
-6. `./bin/pinky-command-clear` removes the current candidate.
+1. The assistant exposes exactly one visible direct command ending in `# pinky`.
+2. `./bin/pinky-cockpit-watch` watches visible ChatGPT text from a foreground Terminal cockpit.
+3. `./bin/pinky-command-extract` extracts the newest real project-prefixed command into `.run/pinky-command.candidate`.
+4. Duplicate filtering prevents stale command replay.
+5. `./bin/pinky-transport-once` visibly prints the picked command, executes it in Terminal, then prints `Narf!`.
+6. Hidden/background transport remains secondary until the cockpit watcher is stable.
 
 ## Marker rules
 
-Runnable candidates use this visible sequence:
+Primary automatic candidates use this visible direct syntax:
 
 ```text
-🧰 PINKY-RUN
-cd ~/Desktop/pinky-brain && <allowed command>
-🧰 PINKY-READY
+cd ~/Desktop/pinky-brain && <safe command> # pinky
 ```
 
 Current extractor rules require the command to start with:
@@ -58,7 +56,7 @@ Current extractor rules require the command to start with:
 cd ~/Desktop/pinky-brain &&
 ```
 
-The extractor avoids self-extraction, git status probes, and sleep-only probes.
+The extractor rejects placeholder/meta examples, self-extraction, cockpit/service control commands, docs probes, git status probes, and command bodies such as `<command>`.
 
 ## Safety classification
 
