@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd ~/Desktop/pinky-brain
+min_avail_kb=1048576
+avail_kb=$(df -k . | awk "NR==2 {print \$4}")
+logs_kb=$(du -sk logs 2>/dev/null | awk "{print \$1}")
+if [[ "$avail_kb" -lt "$min_avail_kb" ]]; then echo "PINKY PREFLIGHT FAIL: disk space below 1GiB"; exit 20; fi
+if [[ "$logs_kb" -gt 102400 ]]; then echo "PINKY PREFLIGHT FAIL: logs above 100MiB"; exit 21; fi
+echo "PINKY PREFLIGHT OK"
