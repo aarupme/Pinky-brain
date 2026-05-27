@@ -54,7 +54,18 @@ fi
 if [[ -n "${code_command:-}" ]]; then
   printf "%s\n" "$code_command" | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE"
 else
-  awk 'index($0, "🧰 PINKY-RUN") { armed=1; command=""; next } armed && /^[[:space:]]*cd[[:space:]]+~\/Desktop\/pinky-brain[[:space:]]+&&/ && $0 !~ /pinky-command-extract/ { command=$0; next } armed && index($0, "🧰 PINKY-READY") && command != "" { last_command=command; found=1; armed=0; command=""; next } END { if (found) print last_command; else exit 2 }' "$TMP_FILE" | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE" || true
+  python3 - "$TMP_FILE" <<'PY' | "$ROOT_DIR/bin/pinky-command-normalize" > "$CANDIDATE_FILE" || true
+import re
+import sys
+text = open(sys.argv[1], "r", encoding="utf-8", errors="replace").read()
+pattern = re.compile(r"cd\s+~/Desktop/pinky-brain\s+&&\s+.+?#\s*pinky")
+blocked = ("pinky-command-extract", "pinky-read-visible", "pinky-visible-line-once", "pinky-chatgpt-once")
+for candidate in reversed(pattern.findall(text)):
+    if not any(token in candidate for token in blocked):
+        print(candidate)
+        raise SystemExit(0)
+raise SystemExit(2)
+PY
 fi
 
 if [[ -s "$CANDIDATE_FILE" ]]; then
