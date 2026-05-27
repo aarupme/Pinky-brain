@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd ~/Desktop/pinky-brain
+mkdir -p .run
+reader=.run/pinky-v2-smoke-reader
+visible=.run/pinky-v2-smoke-visible.txt
+candidate=.run/pinky-command.candidate
+a=PINKY-BASH-
+b=START
+c=END
+hash=#
+word=pinky
+printf "%s\n" "#!/usr/bin/env bash" "cat $visible" > "$reader"
+chmod +x "$reader"
+rm -f "$candidate"
+printf "%s\n" "${a}${b}" "cd ~/Desktop/pinky-brain && printf V2_SMOKE_OK" "${a}${c}" > "$visible"
+PINKY_READ_VISIBLE="$reader" ./bin/pinky-command-extract >/tmp/pinky-v2-smoke-complete.out
+test -s "$candidate"
+grep -q "V2_SMOKE_OK" "$candidate"
+rm -f "$candidate"
+printf "%s\n" "cd ~/Desktop/pinky-brain && printf OLD_SUFFIX $hash $word" > "$visible"
+if PINKY_READ_VISIBLE="$reader" ./bin/pinky-command-extract >/tmp/pinky-v2-smoke-suffix.out 2>&1; then echo "FAIL old suffix accepted"; exit 30; fi
+rm -f "$candidate"
+printf "%s\n" "${a}${b}" "cd ~/Desktop/pinky-brain && printf INCOMPLETE" > "$visible"
+if PINKY_READ_VISIBLE="$reader" ./bin/pinky-command-extract >/tmp/pinky-v2-smoke-incomplete.out 2>&1; then echo "FAIL incomplete envelope accepted"; exit 31; fi
+echo "PINKY_V2_SMOKE_OK"
