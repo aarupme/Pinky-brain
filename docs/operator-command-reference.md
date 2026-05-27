@@ -79,3 +79,11 @@ Current safe allowlist is intentionally narrow and limited to local read-only st
 - Patch in small reversible slices.
 - Validate before commit.
 - Commit and push only after validation.
+
+## Cockpit status workflow
+
+- Terminal 1 runs the foreground cockpit watcher.
+- Terminal 2 is for Brain admin commands only.
+- Use ./bin/pinky-cockpit-status for read-only cockpit health checks.
+- Do not send inspection, git, sed, or docs commands through the Pinky automatic lane.
+- Pinky automatic lane is for simple visible execution payloads ending in # pinky.

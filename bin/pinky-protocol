@@ -29,3 +29,9 @@ Command execution rule:
 Recommended status check:
 cd ~/Desktop/pinky-brain && ./bin/pinky-status
 EOF
+
+Binary lane rule:
+- one reply targets one operator only
+- Brain lane and Pinky lane must not be mixed
+- Terminal 1 is cockpit watcher
+- Terminal 2 is Brain admin

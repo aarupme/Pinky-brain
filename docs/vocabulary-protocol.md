@@ -35,3 +35,10 @@ Status: ACTIVE
 ## Rule
 
 The cockpit watcher is the primary user-facing path. Hidden/background service and toolbox marker paths are secondary until explicitly reactivated.
+
+## Binary lane rule
+
+- One assistant reply targets one operator only.
+- Brain lane uses manual Terminal instructions only.
+- Pinky lane uses one automatic # pinky command only.
+- Never mix Brain instructions and Pinky commands in the same operational reply.
