@@ -26,6 +26,7 @@ while true; do
     if [[ -n "$command_text" && "$command_hash" != "$last_hash" ]]; then
       printf "%s\\n" "$command_hash" > "$LAST_HASH_FILE"
       cp "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-transport.input"
+      "$ROOT_DIR/bin/pinky-preflight"
       set +e
       "$ROOT_DIR/bin/pinky-transport-once"
       run_code="$?"
