@@ -9,6 +9,25 @@ WATCHER_PID="$RUN_DIR/pinky-cockpit-watch.pid"
 STATE_FILE="$RUN_DIR/pinky-beacon.state"
 LOOP_STOP="$RUN_DIR/pinky-loop.stop"
 SLEEP_SECONDS="${PINKY_SLEEP_SECONDS:-1}"
+max_cycles="${PINKY_MAX_CYCLES:-0}"
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --max-cycles)
+      if [[ "$#" -lt 2 ]]; then echo "PINKY cockpit refused: --max-cycles requires a value" >&2; exit 64; fi
+      max_cycles="$2"
+      shift 2
+      ;;
+    --sleep)
+      if [[ "$#" -lt 2 ]]; then echo "PINKY cockpit refused: --sleep requires a value" >&2; exit 64; fi
+      SLEEP_SECONDS="$2"
+      shift 2
+      ;;
+    *)
+      echo "PINKY cockpit refused: unknown argument $1" >&2
+      exit 64
+      ;;
+  esac
+done
 
 "$ROOT_DIR/bin/pinky-preflight"
 mkdir -p "$RUN_DIR"
@@ -31,7 +50,6 @@ printf "PINKY cockpit state=watching\n"
 printf "Narf!" > "$RUN_DIR/pinky-narf.txt"
 "$ROOT_DIR/bin/pinky-send" --file "$RUN_DIR/pinky-narf.txt"
 
-max_cycles="${PINKY_MAX_CYCLES:-0}"
 cycle=0
 
 while true; do
