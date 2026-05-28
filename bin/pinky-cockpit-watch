@@ -5,16 +5,27 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUN_DIR="$ROOT_DIR/.run"
 LAST_SUCCESS_HASH_FILE="$RUN_DIR/pinky-cockpit-watch.last-success-hash"
 LAST_ATTEMPT_HASH_FILE="$RUN_DIR/pinky-cockpit-watch.last-attempt-hash"
+WATCHER_PID="$RUN_DIR/pinky-cockpit-watch.pid"
+STATE_FILE="$RUN_DIR/pinky-beacon.state"
+LOOP_STOP="$RUN_DIR/pinky-loop.stop"
 SLEEP_SECONDS="${PINKY_SLEEP_SECONDS:-1}"
 
 "$ROOT_DIR/bin/pinky-preflight"
 mkdir -p "$RUN_DIR"
+printf "%s\n" "$$" > "$WATCHER_PID"
+printf "watching\n" > "$STATE_FILE"
+rm -f "$LOOP_STOP"
 LOCK_DIR="$RUN_DIR/pinky-cockpit-watch.lock"
 if ! mkdir "$LOCK_DIR" 2>/dev/null; then
   echo "PINKY cockpit refused: already running"
   exit 23
 fi
-trap 'rmdir "$LOCK_DIR"' EXIT
+cleanup() {
+  rmdir "$LOCK_DIR" 2>/dev/null || true
+  rm -f "$WATCHER_PID"
+  printf "stopped\n" > "$STATE_FILE"
+}
+trap cleanup EXIT
 
 printf "PINKY cockpit state=watching\n"
 printf "Narf!" > "$RUN_DIR/pinky-narf.txt"

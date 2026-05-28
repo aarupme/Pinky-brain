@@ -2,6 +2,9 @@
 set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUN_DIR="$ROOT_DIR/.run"
+CANDIDATE_FILE="$RUN_DIR/pinky-command.candidate"
+CANDIDATE_CLASSIFICATION_FILE="$RUN_DIR/pinky-command.candidate.classification"
+CANDIDATE_REASON_FILE="$RUN_DIR/pinky-command.candidate.reason"
 LOG_DIR="$ROOT_DIR/logs/transport-runs"
 mkdir -p "$RUN_DIR" "$LOG_DIR"
 INPUT_FILE="${1:-$RUN_DIR/pinky-transport.input}"
@@ -37,5 +40,6 @@ exit_code="${PIPESTATUS[0]}"
 set -e
 
 tail -80 "$log"
+rm -f "$CANDIDATE_FILE" "$CANDIDATE_CLASSIFICATION_FILE" "$CANDIDATE_REASON_FILE"
 printf "\nNarf! exit=%s hash=%s log=%s\n" "$exit_code" "$hash" "$log"
 exit "$exit_code"

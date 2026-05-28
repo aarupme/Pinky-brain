@@ -8,6 +8,7 @@ STATE_FILE="$RUN_DIR/pinky-beacon.state"
 LOOP_PID="$RUN_DIR/pinky-loop.pid"
 BEACON_PID="$RUN_DIR/pinky-beacon.pid"
 LOOP_STOP="$RUN_DIR/pinky-loop.stop"
+WATCHER_PID="$RUN_DIR/pinky-cockpit-watch.pid"
 COMMAND_CANDIDATE="$RUN_DIR/pinky-command.candidate"
 LAST_REJECTION_FILE="$RUN_DIR/pinky-command.last-rejection"
 LAST_RUN_FILE="$RUN_DIR/pinky-command.last-run"
@@ -62,6 +63,7 @@ check_mark() {
 state="unknown"
 [[ -s "$STATE_FILE" ]] && state="$(head -n 1 "$STATE_FILE" 2>/dev/null || echo unknown)"
 
+if pid_running "$WATCHER_PID"; then watcher="running"; else watcher="stopped"; fi
 if pid_running "$LOOP_PID"; then loop="running"; else loop="stopped"; fi
 if pid_running "$BEACON_PID"; then beacon="running"; else beacon="stopped"; fi
 if [[ -e "$LOOP_STOP" ]]; then stop="present"; else stop="absent"; fi
@@ -70,6 +72,7 @@ if [[ -n "$(git -C "$ROOT_DIR" status --short 2>/dev/null)" ]]; then git_state="
 
 printf "Pinky cockpit  "
 status_dot "$state"; printf " state=%s  " "$state"
+status_dot "$watcher"; printf " watcher=%s  " "$watcher"
 status_dot "$loop"; printf " loop=%s  " "$loop"
 status_dot "$beacon"; printf " beacon=%s  " "$beacon"
 if [[ "$candidate" == "present" ]]; then status_dot candidate; else status_dot ok; fi

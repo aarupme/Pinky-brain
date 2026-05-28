@@ -9,6 +9,7 @@ LOOP_STOP="$RUN_DIR/pinky-loop.stop"
 LOOP_LAST_HASH="$RUN_DIR/pinky-loop.last-hash"
 LOOP_LAST_SEND="$RUN_DIR/pinky-loop.last-send"
 BEACON_PID="$RUN_DIR/pinky-beacon.pid"
+WATCHER_PID="$RUN_DIR/pinky-cockpit-watch.pid"
 COMMAND_CANDIDATE="$RUN_DIR/pinky-command.candidate"
 
 read_oneline() {
@@ -67,6 +68,7 @@ printf 'protocol-source=terminal:pinky-protocol\n'
 printf 'start-prompt=prompts/runtime-start.txt\n'
 
 printf '\n%s\n' '--- runtime ---'
+pid_status "watcher" "$WATCHER_PID"
 pid_status "loop" "$LOOP_PID"
 pid_status "beacon" "$BEACON_PID"
 if [[ -e "$LOOP_STOP" ]]; then
