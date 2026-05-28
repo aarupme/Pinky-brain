@@ -47,8 +47,6 @@ cleanup() {
 trap cleanup EXIT
 
 printf "PINKY cockpit state=watching\n"
-printf "Narf!" > "$RUN_DIR/pinky-narf.txt"
-"$ROOT_DIR/bin/pinky-send" --file "$RUN_DIR/pinky-narf.txt"
 
 cycle=0
 

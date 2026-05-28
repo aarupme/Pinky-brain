@@ -32,7 +32,7 @@ Terminal roles:
 - Terminal 2 = Brain/admin/recovery only.
 
 Runtime callbacks:
-- Cockpit startup sends Narf! when watching.
+- Cockpit startup prints watching state but does not send Narf!.
 - Every completed Pinky execution sends Narf!.
 
 Safety gates:
