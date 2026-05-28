@@ -41,7 +41,7 @@ Do not send a second command until the first one has completed and Pinky has ret
 
 ## Confirm completion
 
-A completed Pinky execution must report `Narf!`.
+The outermost terminal workflow must send `Narf!` to ChatGPT only after execution, cleanup, review, and any commit/push steps are complete.
 
 The watcher should also show the last exit code.
 

@@ -115,6 +115,6 @@ Rules:
 - Retire suffix-only `# pinky` as active execution syntax.
 - Keep Brain/Pinky binary lane separation.
 - No hidden or background loops as the primary UX.
-- Every completed Pinky execution must send `Narf!` back to ChatGPT.
+- Only the outermost completed terminal workflow sends `Narf!` back to ChatGPT, after all execution, cleanup, verification, and commit/push steps finish.
 - Every transport execution must pass preflight and syntax checks first.
 - Output and logs must be bounded before Pinky can run again.
