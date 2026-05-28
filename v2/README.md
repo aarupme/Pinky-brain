@@ -92,3 +92,16 @@ Pinky v2 is one live transport session per ChatGPT chat.
 - `v2/bin/pinky-request-stop` is only for intentionally leaving the chat/workstream.
 - Boot tests must not stop Pinky unless the test is explicitly a shutdown test.
 
+## Command body safety contract
+
+ChatGPT-authored Pinky bash bodies must be safe shell, even though Pinky normalizes dangerous Unicode punctuation before execution.
+
+- Use ASCII-only command bodies.
+- Do not use heredocs in manual bash or Pinky bash blocks.
+- Do not use raw multiline quoted strings.
+- Do not place raw smart-quote characters inside shell-quoted strings.
+- Do not use raw `git diff` or raw `git log`.
+- Disable pagers before git inspection commands: `export GIT_PAGER=cat` and `export PAGER=cat`.
+- Use `git --no-pager status -sb`, `git --no-pager log --oneline -N`, and `git --no-pager diff --stat`.
+- For Unicode normalization tests, generate fixtures with Python `chr(...)` into temp files, then run `v2/bin/pinky-normalize-command` against those files.
+- Do not start and stop Pinky for tests. If Pinky is live and no execution is needed, send no Pinky bash block.
