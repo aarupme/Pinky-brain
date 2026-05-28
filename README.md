@@ -1,6 +1,6 @@
 # Pinky Brain
 
-Pinky Brain is currently hard-isolated to the v2 inline Terminal transport.
+Pinky Brain is a lightweight inline Terminal transport.
 
 Active product path:
 
@@ -34,12 +34,12 @@ Safety:
 
 Launch:
 
-- Double-click ~/Desktop/Pinky.command to start Pinky in Terminal.
+- Double-click ~/Desktop/Pinky Brain.command to start Pinky in Terminal.
 - Developer launch: cd ~/Desktop/pinky-brain && v2/bin/pinky-start.
 - Reinstall launcher: v2/install/install-desktop-launcher.
 
 Launcher status:
 
-- Current working launcher: ~/Desktop/Pinky.command.
+- Current working launcher: ~/Desktop/Pinky Brain.command.
 - Pinky.app wrapper is disabled for now because the minimal shell app bundle can trigger a Rosetta prompt on Apple Silicon.
 - Next app wrapper must be native and must not require Rosetta.

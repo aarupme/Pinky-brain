@@ -1,8 +1,10 @@
 #!/bin/bash
 set -eu
-launcher="$HOME/Desktop/Pinky.command"
+old_launcher="${HOME}/Desktop/Pinky.command"
+launcher="${HOME}/Desktop/Pinky Brain.command"
+rm -f "$old_launcher"
 printf "%s\n" "#!/bin/bash" > "$launcher"
-printf "%s\n" 'cd "$HOME/Desktop/pinky-brain" || exit 1' >> "$launcher"
+printf "%s\n" "cd ${HOME}/Desktop/pinky-brain || exit 1" >> "$launcher"
 printf "%s\n" "export GIT_PAGER=cat" >> "$launcher"
 printf "%s\n" "export PAGER=cat" >> "$launcher"
 printf "%s\n" "exec v2/bin/pinky-start" >> "$launcher"
