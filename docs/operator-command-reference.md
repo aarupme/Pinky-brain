@@ -36,7 +36,7 @@ Pinky Brain is a supervised local runtime. It must preserve manual control and m
 Pinky cockpit execution is the primary user-facing path.
 
 1. The assistant exposes exactly one visible direct command ending in `# pinky`.
-2. `./bin/pinky-cockpit-watch` watches visible ChatGPT text from a foreground Terminal cockpit.
+2. `./bin/pinky-cockpit-watch` watches the code-editor command file from a foreground Terminal cockpit.
 3. `./bin/pinky-command-extract` extracts the newest real project-prefixed command into `.run/pinky-command.candidate`.
 4. Duplicate filtering prevents stale command replay.
 5. `./bin/pinky-transport-once` visibly prints the picked command, executes it in Terminal, then prints `Narf!`.
@@ -82,8 +82,8 @@ Current safe allowlist is intentionally narrow and limited to local read-only st
 
 ## Cockpit status workflow
 
-- Terminal 1 runs the foreground cockpit watcher.
-- Terminal 2 is for Brain admin commands only.
+- Single Terminal Mode is the default: patch and recover with the watcher stopped.
+- Start the foreground cockpit watcher only for live Pinky execution or bounded verification.
 - Use ./bin/pinky-cockpit-status for read-only cockpit health checks.
 - Do not send inspection, git, sed, or docs commands through the Pinky automatic lane.
 - Pinky automatic lane is for simple visible execution payloads ending in # pinky.

@@ -49,6 +49,7 @@ trap cleanup EXIT
 printf "PINKY cockpit state=watching\n"
 
 cycle=0
+completed_success=0
 
 while true; do
   set +e
@@ -72,14 +73,13 @@ while true; do
       "$ROOT_DIR/bin/pinky-preflight"
 
       set +e
-      "$ROOT_DIR/bin/pinky-transport-once"
+      PINKY_SUPPRESS_TRANSPORT_NARF=1 "$ROOT_DIR/bin/pinky-transport-once"
       run_code="$?"
       set -e
 
       if [[ "$run_code" -eq 0 ]]; then
         printf "%s\n" "$command_hash" > "$LAST_SUCCESS_HASH_FILE"
-        printf "Narf!" > "$RUN_DIR/pinky-narf.txt"
-        "$ROOT_DIR/bin/pinky-send" --file "$RUN_DIR/pinky-narf.txt"
+        completed_success=1
       fi
 
       printf "PINKY cockpit state=watching last_exit=%s\n" "$run_code"

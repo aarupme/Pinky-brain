@@ -11,7 +11,7 @@ There are two working lanes: Brain lane and Pinky lane.
 Use Brain lane for:
 
 - numbered decisions
-- manual Terminal 2 instructions
+- manual single Terminal instructions
 - recovery
 - documentation planning
 - architecture and UX choices
@@ -21,7 +21,7 @@ Brain questions use numbered options. Brain answers with a number only.
 
 ### Pinky lane
 
-Use Pinky lane only when Pinky is awake and Terminal 1 is running the cockpit watcher.
+Use Pinky lane only when Pinky is awake and the single Terminal is running the cockpit watcher.
 
 A Pinky lane message contains exactly one runnable v2 command envelope.
 
@@ -33,11 +33,11 @@ A Pinky lane message contains exactly one runnable v2 command envelope.
 
 It appears when:
 
-- the cockpit watcher starts watching
+- a command execution completes
 - a Pinky execution completes
 - Pinky has returned control to Brain / Assistant
 
-Every completed Pinky execution must send `Narf!`.
+Every completed Pinky command execution must send `Narf!`.
 
 ### `Bash remaining`
 
@@ -68,7 +68,7 @@ Common reasons:
 
 - Pinky is sleeping
 - Pinky is stopped
-- Terminal 1 is not running cockpit watcher
+- the watcher is not running
 - the task needs Brain judgment
 - the command could trap Terminal in quote, heredoc, or continuation prompt
 - the command could recursively read growing logs or status logs
@@ -79,7 +79,7 @@ Common reasons:
 1. Assistant asks Brain a numbered question.
 2. Brain replies with one number.
 3. Assistant reports bash remaining and delta reason.
-4. If Pinky is stopped, Assistant gives Terminal 2 instructions.
+4. If Pinky is stopped, Assistant gives single Terminal instructions.
 5. If Pinky is running, Assistant may send one v2 envelope.
 6. Pinky completes and sends `Narf!`.
 7. Assistant continues or asks Brain for the next numbered decision.

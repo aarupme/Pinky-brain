@@ -2,7 +2,7 @@
 
 The command envelope is the current Pinky v2 execution contract.
 
-Use it only when Pinky is awake, Terminal 1 is running the cockpit watcher, and the assistant needs Pinky to run exactly one shell payload.
+Use it only when Pinky is awake, the single Terminal is running the cockpit watcher, and the assistant needs Pinky to run exactly one shell payload.
 
 ```text
 PINKY-BASH-START
@@ -25,7 +25,7 @@ PINKY-BASH-END
 
 ## Extraction behavior
 
-The current extractor reads visible ChatGPT text and selects the latest valid envelope.
+The current extractor reads the code-editor command file and selects the latest valid envelope.
 
 It rejects unsafe or ambiguous input:
 
@@ -75,6 +75,6 @@ The envelope does not mean "run anything."
 It means:
 
 1. Pinky is awake.
-2. The cockpit watcher is visible in Terminal 1.
+2. The cockpit watcher is visible in the single Terminal.
 3. The payload is safe enough to send through the supervised runtime.
 4. Preflight and syntax checks still happen before execution.

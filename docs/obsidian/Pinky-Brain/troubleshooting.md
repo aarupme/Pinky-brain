@@ -7,14 +7,14 @@ Use this page when the system behavior does not match the expected Pinky Brain l
 Likely causes:
 
 - cockpit watcher did not start
-- Terminal 1 is not actually watching
+- the watcher is not actually running
 - watcher lock or state is stale
 - Pinky is stopped or sleeping
 
 Action:
 
 1. Stop sending Pinky envelopes.
-2. Use Terminal 2.
+2. Use the single Terminal with the watcher stopped.
 3. Inspect status with bounded commands.
 4. Restart only after state is clear.
 
@@ -30,7 +30,7 @@ Likely causes:
 Action:
 
 1. Do not resend the same envelope.
-2. Inspect the last exit/status from Terminal 2.
+2. Inspect the last exit/status from the single Terminal after stopping the watcher.
 3. Check bounded recent logs only.
 4. Return to Brain decision if unclear.
 
@@ -48,7 +48,7 @@ Action:
 1. Stop automation.
 2. Check for multiple watcher processes.
 3. Check watcher lock.
-4. Keep Terminal 1 dedicated to cockpit watcher only.
+4. Keep the watcher stopped while patching or recovering.
 
 ## Command rejected before execution
 
@@ -103,14 +103,14 @@ Action:
 
 Terminal roles:
 
-- Terminal 1 = Pinky cockpit watcher only
-- Terminal 2 = Brain/admin/recovery only
+- Single Terminal Mode = patch/recover with watcher stopped
+- Live verification = start watcher only for the bounded test
 
 Action:
 
 1. Stop and identify which terminal is doing what.
-2. Restore Terminal 1 to watcher-only.
-3. Use Terminal 2 for inspection, recovery, or manual writes.
+2. Stop the watcher before patching or recovery.
+3. Use the single Terminal for inspection, recovery, or manual writes.
 
 ## Logs are too large
 

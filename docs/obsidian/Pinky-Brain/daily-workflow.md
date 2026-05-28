@@ -11,21 +11,21 @@ When Pinky is stopped or sleeping, use Brain lane first.
 The assistant should either:
 
 - ask Brain a numbered decision question
-- give a manual Terminal 2 instruction
-- direct Brain to start the cockpit watcher in Terminal 1
+- give a manual single Terminal instruction
+- direct Brain to start the cockpit watcher in the single Terminal
 
 ## Start cockpit watcher
 
-Terminal 1 is the cockpit watcher terminal.
+The single Terminal becomes the cockpit watcher terminal only during live Pinky execution or bounded verification.
 
 Start Pinky only when Brain has chosen to start it.
 
 Expected startup behavior:
 
-1. Terminal 1 starts the cockpit watcher.
+1. The single Terminal starts the cockpit watcher.
 2. The watcher prints that it is watching.
 3. Pinky sends `Narf!`.
-4. Terminal 1 remains dedicated to the cockpit watcher.
+4. The single Terminal remains occupied while the watcher is running.
 
 ## Send one envelope
 
@@ -51,9 +51,9 @@ After completion:
 2. Assistant explains the delta reason.
 3. Assistant either continues with the next safe step or asks Brain for a numbered decision.
 
-## Use Terminal 2 for admin and recovery
+## Use Single Terminal Mode for admin and recovery
 
-Terminal 2 is for Brain/admin/recovery work.
+Brain/admin/recovery work happens in the same single Terminal with the watcher stopped.
 
 Use it when:
 
@@ -68,8 +68,8 @@ Use it when:
 
 1. Brain chooses the next mode.
 2. Assistant prepares one safe step.
-3. Terminal 1 runs Pinky only if watcher is active.
-4. Terminal 2 handles admin/recovery when Pinky is stopped.
+3. The single Terminal runs Pinky only while the watcher is active.
+4. The single Terminal handles admin/recovery when Pinky is stopped.
 5. Pinky reports `Narf!` after execution.
 6. Assistant updates `Bash remaining`.
 7. Brain answers the next numbered question when needed.

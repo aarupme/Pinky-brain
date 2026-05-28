@@ -6,7 +6,7 @@ Use recovery whenever Pinky behavior is unclear, stuck, duplicated, or unsafe.
 
 Do not keep pushing commands into a failing path.
 
-Stop automation, return to Brain lane, and use Terminal 2 for bounded inspection.
+Stop automation, return to Brain lane, stop the watcher if needed, and use the single Terminal for bounded inspection.
 
 ## If Pinky is sleeping or stopped
 
@@ -16,24 +16,24 @@ Use Brain lane first:
 
 1. Confirm Pinky is stopped or sleeping.
 2. Decide whether to restart cockpit watcher.
-3. Use Terminal 2 for admin checks.
-4. Only return to Pinky lane after Terminal 1 is visibly watching.
+3. Use the single Terminal for admin checks after stopping the watcher.
+4. Only return to Pinky lane after the single Terminal is visibly running the watcher.
 
 ## If `Narf!` does not appear
 
-Expected behavior is `Narf!` on cockpit startup and after each completed execution.
+Expected behavior is `Narf!` after a completed command execution. Watcher startup prints watching state but does not send `Narf!`.
 
 If it does not appear:
 
 1. Stop sending Pinky envelopes.
-2. Inspect from Terminal 2.
+2. Inspect from the single Terminal after stopping the watcher.
 3. Check cockpit watcher state.
 4. Check recent logs with bounded commands only.
 5. Decide whether to restart Pinky.
 
 ## If cockpit watcher is stuck
 
-Use Terminal 2.
+Use the single Terminal with the watcher stopped.
 
 Check for:
 
@@ -83,8 +83,8 @@ Large logs are a stop signal.
 
 ## Recovery terminal rule
 
-Terminal 1 is for cockpit watcher.
+Single Terminal Mode is the default.
 
-Terminal 2 is for recovery.
+Recovery happens in the same single Terminal after stopping the watcher.
 
 When recovering, do not blur the two terminals.

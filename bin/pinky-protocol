@@ -8,7 +8,7 @@ Current operator contract: v2 envelope only.
 
 Use Pinky lane only when:
 - Pinky is awake.
-- Terminal 1 is running the cockpit watcher.
+- the single Terminal is running the cockpit watcher.
 - The message contains exactly one runnable v2 envelope.
 - The payload is safe, bounded, and starts from the repo.
 
@@ -28,12 +28,12 @@ Rules:
 - Avoid recursive status-log reading.
 
 Terminal roles:
-- Terminal 1 = Pinky cockpit watcher only.
-- Terminal 2 = Brain/admin/recovery only.
+- Single Terminal Mode = patch/recover with watcher stopped.
+- Live verification = start watcher only for the bounded test.
 
 Runtime callbacks:
 - Cockpit startup prints watching state but does not send Narf!.
-- Every completed Pinky execution sends Narf!.
+- `Narf!` is sent only by the outermost completed terminal workflow, after all verification and cleanup steps have finished.
 
 Safety gates:
 - Preflight before cockpit startup.
@@ -43,5 +43,5 @@ Safety gates:
 - Log threshold guard.
 - Singleton cockpit watcher lock.
 
-If Pinky fails to respond, switch to Brain recovery in Terminal 2.
+If Pinky fails to respond, stop the watcher and recover from the single Terminal.
 PINKY_PROTOCOL

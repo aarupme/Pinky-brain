@@ -43,7 +43,7 @@ Assistant must not:
 
 Pinky is the local runtime supervision layer.
 
-Pinky runs supervised shell payloads only when awake and watched from Terminal 1.
+Pinky runs supervised shell payloads only when awake and watched from the single Terminal.
 
 Pinky must:
 
@@ -54,24 +54,24 @@ Pinky must:
 - report completion with `Narf!`
 - avoid duplicate execution by command hash
 
-## Terminal 1
+## Single Terminal: live watcher mode
 
-Terminal 1 is the Pinky cockpit watcher only.
+Single Terminal Mode is the default.
 
-Use Terminal 1 for:
+Use live watcher mode for:
 
 - visible cockpit watcher
 - Pinky startup confirmation
 - `Narf!` callbacks
 - observed Pinky execution results
 
-Do not use Terminal 1 for Brain/admin/recovery work while it is acting as cockpit watcher.
+Do not do Brain/admin/recovery work while the watcher is running.
 
-## Terminal 2
+## Single Terminal: admin and recovery mode
 
-Terminal 2 is Brain/admin/recovery only.
+Use the same single Terminal for Brain/admin/recovery after stopping the watcher.
 
-Use Terminal 2 for:
+Use admin and recovery mode for:
 
 - repo inspection
 - manual recovery
@@ -83,12 +83,12 @@ Use Terminal 2 for:
 
 Correct:
 
-- Pinky is stopped, so Assistant gives a Terminal 2 command.
+- Pinky is stopped, so Assistant gives a single Terminal command.
 - Brain chooses an option by number.
-- Terminal 1 stays dedicated to cockpit watcher.
+- The single Terminal stays occupied while the watcher is running.
 
 Incorrect:
 
 - Assistant sends a Pinky envelope while Pinky is sleeping.
-- Terminal 1 is used for manual repo editing while cockpit watcher is expected to run.
+- The single Terminal is used for manual repo editing while the watcher is still running.
 - Brain is asked to paste a command into a trapped quote prompt.

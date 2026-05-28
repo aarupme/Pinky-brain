@@ -41,5 +41,9 @@ set -e
 
 tail -80 "$log"
 rm -f "$CANDIDATE_FILE" "$CANDIDATE_CLASSIFICATION_FILE" "$CANDIDATE_REASON_FILE"
-printf "\nNarf! exit=%s hash=%s log=%s\n" "$exit_code" "$hash" "$log"
+if [[ "${PINKY_SUPPRESS_TRANSPORT_NARF:-0}" == "1" ]]; then
+  printf "\nPINKY transport complete exit=%s hash=%s log=%s\n" "$exit_code" "$hash" "$log"
+else
+  printf "\nNarf! exit=%s hash=%s log=%s\n" "$exit_code" "$hash" "$log"
+fi
 exit "$exit_code"

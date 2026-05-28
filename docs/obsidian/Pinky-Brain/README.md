@@ -9,14 +9,14 @@ Pinky Brain is a local macOS runtime supervision layer controlled by Brain, the 
 - Brain makes product, UX, architecture, and recovery decisions.
 - Assistant researches, plans, writes, and prepares safe commands.
 - Pinky executes supervised shell payloads only when awake and watched.
-- Terminal 1 is the Pinky cockpit watcher only.
-- Terminal 2 is Brain/admin/recovery only.
+- Single Terminal Mode is the default.
+- Use the same single Terminal for Brain/admin/recovery after stopping the watcher.
 
 ## Fastest safe start
 
 1. Assume Pinky is sleeping or stopped until proven otherwise.
 2. Use Brain lane first.
-3. Start cockpit watcher in Terminal 1 only when Brain chooses to start Pinky.
+3. Start the cockpit watcher only for live Pinky execution or verification.
 4. Wait for `Narf!`.
 5. Send exactly one v2 command envelope.
 6. Wait for completion and `Narf!`.
