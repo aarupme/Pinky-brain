@@ -39,7 +39,7 @@ Pinky cockpit execution is the primary user-facing path.
 2. `./bin/pinky-cockpit-watch` watches the code-editor command file from a foreground Terminal cockpit.
 3. `./bin/pinky-command-extract` extracts the newest real project-prefixed command into `.run/pinky-command.candidate`.
 4. Duplicate filtering prevents stale command replay.
-5. `./bin/pinky-transport-once` visibly prints the picked command, executes it in Terminal, then prints `Narf!`.
+5. `./bin/pinky-transport-once` visibly prints the picked command and executes it. The outer terminal workflow sends `Narf!` back to ChatGPT only after watcher stop, cleanup, review, commit/push, and final status checks are complete.
 6. Hidden/background transport remains secondary until the cockpit watcher is stable.
 
 ## Marker rules

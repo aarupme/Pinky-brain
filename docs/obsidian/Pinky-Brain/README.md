@@ -39,6 +39,7 @@ Retired `# pinky`, legacy `PINKY-RUN`, and legacy `PINKY-CODE-RUN` are not the c
 - [[interaction-contract]] — how Brain, Assistant, and Pinky communicate
 - [[operator-roles]] — responsibilities and terminal separation
 - [[daily-workflow]] — normal day-to-day operation
+- [[single-terminal-code-editor-workflow]] — default one-terminal workflow using the code-editor command source
 - [[command-envelope]] — v2 envelope rules and examples
 - [[runtime-safety]] — mandatory safety rules
 - [[recovery]] — what to do when Pinky is unclear or stuck

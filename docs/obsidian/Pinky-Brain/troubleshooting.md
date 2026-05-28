@@ -2,7 +2,7 @@
 
 Use this page when the system behavior does not match the expected Pinky Brain loop.
 
-## No `Narf!` after startup
+## No watching state after startup
 
 Likely causes:
 
@@ -18,7 +18,7 @@ Action:
 3. Inspect status with bounded commands.
 4. Restart only after state is clear.
 
-## No `Narf!` after execution
+## No final `Narf!` after workflow completion
 
 Likely causes:
 

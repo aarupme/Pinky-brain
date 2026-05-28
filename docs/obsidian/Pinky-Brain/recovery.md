@@ -21,7 +21,7 @@ Use Brain lane first:
 
 ## If `Narf!` does not appear
 
-Expected behavior is `Narf!` after a completed command execution. Watcher startup prints watching state but does not send `Narf!`.
+Expected behavior is `Narf!` only after the outermost terminal workflow completes. Watcher startup prints watching state but does not send `Narf!`, and inner transport completion does not send `Narf!`.
 
 If it does not appear:
 

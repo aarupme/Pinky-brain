@@ -23,6 +23,7 @@ Start with:
 1. [[README]]
 2. [[daily-workflow]]
 3. [[command-envelope]]
+4. [[single-terminal-code-editor-workflow]]
 4. [[runtime-safety]]
 5. [[recovery]]
 
@@ -61,7 +62,7 @@ Before considering the vault current, check:
 - README has the current operating model.
 - Command envelope page teaches v2 envelope only.
 - Safety page includes preflight, syntax check, output cap, log guard, watcher lock, and no hidden loops.
-- Recovery page explains what to do when `Narf!` is missing.
+- Recovery page explains what to do when the final workflow callback is missing.
 - Legacy page contains old syntax instead of normal workflow pages.
 
 ## When the manual falls behind
