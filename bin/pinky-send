@@ -9,14 +9,14 @@ SEND_LOG="$LOG_DIR/pinky-send.log"
 mkdir -p "$LOG_DIR"
 
 usage() {
-  cat <<'EOF'
+  cat <<'USAGE'
 Usage:
   pinky-send --text "message"
   pinky-send --file path/to/file.txt
   pinky-send --start
   pinky-send --stop
   pinky-send --help
-EOF
+USAGE
 }
 
 fail() {
@@ -26,10 +26,9 @@ fail() {
 
 send_text() {
   local message="$1"
-
   [[ -n "$message" ]] || fail "message is empty"
 
-  printf "%s send=attempt bytes=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "${#message}" >> "$SEND_LOG"
+  printf "%s send=attempt bytes=%s target=ChatGPT\n" "$(date '+%Y-%m-%d %H:%M:%S')" "${#message}" >> "$SEND_LOG"
 
   set +e
   osascript - "$message" <<'APPLESCRIPT'
@@ -42,7 +41,7 @@ on run argv
 
   tell application "System Events"
     set chatGPTReady to false
-    repeat 20 times
+    repeat 30 times
       delay 0.1
       if exists process "ChatGPT" then
         if frontmost of process "ChatGPT" is true then
@@ -72,17 +71,17 @@ end run
 APPLESCRIPT
   local send_exit="$?"
   set -e
+
   if [[ "$send_exit" -eq 0 ]]; then
-    printf "%s send=success\\n" "$(date '+%Y-%m-%d %H:%M:%S')" >> "$SEND_LOG"
+    printf "%s send=success target=ChatGPT\n" "$(date '+%Y-%m-%d %H:%M:%S')" >> "$SEND_LOG"
   else
-    printf "%s send=failed exit_code=%s\\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$send_exit" >> "$SEND_LOG"
+    printf "%s send=failed exit_code=%s target=ChatGPT\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$send_exit" >> "$SEND_LOG"
     return "$send_exit"
   fi
 }
 
 send_file() {
   local file_path="$1"
-
   [[ -n "$file_path" ]] || fail "file path is empty"
   [[ -f "$file_path" ]] || fail "file does not exist: $file_path"
 
