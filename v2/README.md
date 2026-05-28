@@ -51,3 +51,32 @@ No background listener for normal operation.
 No VS Code inbox.
 No file bridge as product.
 No logs or ledger architecture.
+
+## V2 isolation contract
+
+Pinky v2 is the active inline Terminal transport.
+
+V2 runtime is intentionally isolated from legacy Pinky mechanisms:
+
+- No root `bin/` runtime dependency.
+- No `.run/` root runtime dependency.
+- No cockpit watcher.
+- No code-editor command lane.
+- No file bridge as product transport.
+- No Terminal `do script`.
+- No new Terminal windows or tabs.
+- No background listener for normal operation.
+
+Active v2 runtime surface:
+
+- `v2/bin/pinky-start`
+- `v2/bin/pinky-listen`
+- `v2/bin/pinky-read-chatgpt`
+- `v2/bin/pinky-parse-next`
+- `v2/bin/pinky-send-chatgpt`
+- `v2/bin/pinky-normalize-command`
+- `v2/bin/pinky-request-stop`
+- `v2/bin/pinky-stop`
+- `v2/.run/`
+
+Legacy files outside `v2/` may remain for archive/reference only. They are not part of the v2 product path.
