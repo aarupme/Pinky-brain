@@ -68,6 +68,7 @@ if pid_running "$LOOP_PID"; then loop="running"; else loop="stopped"; fi
 if pid_running "$BEACON_PID"; then beacon="running"; else beacon="stopped"; fi
 if [[ -e "$LOOP_STOP" ]]; then stop="present"; else stop="absent"; fi
 if [[ -s "$COMMAND_CANDIDATE" ]]; then candidate="present"; else candidate="none"; fi
+if [[ "$watcher" == "running" && "$candidate" == "none" ]]; then ready="yes"; else ready="no"; fi
 if [[ -n "$(git -C "$ROOT_DIR" status --short 2>/dev/null)" ]]; then git_state="dirty"; else git_state="clean"; fi
 
 printf "Pinky cockpit  "
@@ -75,6 +76,8 @@ status_dot "$state"; printf " state=%s  " "$state"
 status_dot "$watcher"; printf " watcher=%s  " "$watcher"
 status_dot "$loop"; printf " loop=%s  " "$loop"
 status_dot "$beacon"; printf " beacon=%s  " "$beacon"
+if [[ "$ready" == "yes" ]]; then status_dot ok; else status_dot warn; fi
+printf " ready=%s  " "$ready"
 if [[ "$candidate" == "present" ]]; then status_dot candidate; else status_dot ok; fi
 printf " candidate=%s  " "$candidate"
 if [[ "$stop" == "present" ]]; then status_dot warn; else status_dot ok; fi

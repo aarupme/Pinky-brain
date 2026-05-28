@@ -68,6 +68,7 @@ printf 'protocol-source=terminal:pinky-protocol\n'
 printf 'start-prompt=prompts/runtime-start.txt\n'
 
 printf '\n%s\n' '--- runtime ---'
+printf 'ready means watcher=running and candidate=none\n'
 pid_status "watcher" "$WATCHER_PID"
 pid_status "loop" "$LOOP_PID"
 pid_status "beacon" "$BEACON_PID"
