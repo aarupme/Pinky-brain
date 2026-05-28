@@ -4,14 +4,19 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUN_DIR="$ROOT_DIR/.run"
 TMP_FILE="$(mktemp)"
 CANDIDATE_FILE="$RUN_DIR/pinky-command.candidate"
+CODE_EDITOR_FILE="$RUN_DIR/pinky-code-editor-command.txt"
 LAST_HASH_FILE="$RUN_DIR/pinky-command.last-hash"
 mkdir -p "$RUN_DIR"
 trap 'rm -f "$TMP_FILE"' EXIT
 READ_VISIBLE="${PINKY_READ_VISIBLE:-$ROOT_DIR/bin/pinky-read-visible}"
-"$READ_VISIBLE" > "$TMP_FILE" 2>&1 || {
-  echo "pinky-command-extract error: failed to read visible ChatGPT text" >&2
-  exit 1
-}
+if [[ -s "$CODE_EDITOR_FILE" ]]; then
+  cat "$CODE_EDITOR_FILE" > "$TMP_FILE"
+else
+  "$READ_VISIBLE" > "$TMP_FILE" 2>&1 || {
+    echo "pinky-command-extract error: failed to read visible ChatGPT text" >&2
+    exit 1
+  }
+fi
 rm -f "$CANDIDATE_FILE"
 
 envelope_command="$(python3 - "$TMP_FILE" <<'PY'
