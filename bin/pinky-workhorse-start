@@ -28,7 +28,7 @@ fi
 rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason" "$RUN_DIR/pinky-transport.input" "$RUN_DIR/pinky-command.last-hash"
 : > "$COMMAND_FILE"
 "$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null
-nohup env PINKY_READ_VISIBLE=/bin/false "$ROOT_DIR/bin/pinky-cockpit-watch" --sleep "$SLEEP_SECONDS" >> "$LOG_FILE" 2>&1 &
+nohup "$ROOT_DIR/bin/pinky-cockpit-watch" --sleep "$SLEEP_SECONDS" >> "$LOG_FILE" 2>&1 &
 pid="$!"
 printf "%s\n" "$pid" > "$PID_FILE"
 sleep 0.5
