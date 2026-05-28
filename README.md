@@ -37,3 +37,9 @@ Launch:
 - Double-click ~/Desktop/Pinky.command to start Pinky in Terminal.
 - Developer launch: cd ~/Desktop/pinky-brain && v2/bin/pinky-start.
 - Reinstall launcher: v2/install/install-desktop-launcher.
+
+Launcher status:
+
+- Current working launcher: ~/Desktop/Pinky.command.
+- Pinky.app wrapper is disabled for now because the minimal shell app bundle can trigger a Rosetta prompt on Apple Silicon.
+- Next app wrapper must be native and must not require Rosetta.
