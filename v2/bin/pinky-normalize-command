@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
+p = Path(sys.argv[1])
+s = p.read_text()
+m = {
+    chr(0x2018): chr(39),
+    chr(0x2019): chr(39),
+    chr(0x201a): chr(39),
+    chr(0x201b): chr(39),
+    chr(0x201c): chr(34),
+    chr(0x201d): chr(34),
+    chr(0x201e): chr(34),
+    chr(0x201f): chr(34),
+    chr(0x2010): chr(45),
+    chr(0x2011): chr(45),
+    chr(0x2012): chr(45),
+    chr(0x2013): chr(45),
+    chr(0x2014): chr(45),
+    chr(0x2015): chr(45),
+    chr(0x2212): chr(45),
+}
+for a, b in m.items():
+    s = s.replace(a, b)
+p.write_text(s)
