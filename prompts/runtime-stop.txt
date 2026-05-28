@@ -1,7 +1,0 @@
-Exit Pinky Brain mode now.
-
-Stop using the Pinky Brain runtime signals 🐭, 🧠, and 🛑 as automation instructions.
-Return to normal ChatGPT conversational behavior.
-Do not assume that messages containing "l" are runtime continuation commands unless the user explicitly defines that again.
-
-Confirm that Pinky Brain mode is disabled.

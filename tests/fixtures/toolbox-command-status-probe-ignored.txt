@@ -1,5 +1,0 @@
-text
-text
-PINKY-BASH-START
-cd ~/Desktop/pinky-brain && git status --short --branch
-PINKY-BASH-END

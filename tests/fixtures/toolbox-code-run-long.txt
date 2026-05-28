@@ -1,3 +1,0 @@
-PINKY-BASH-START
-cd ~/Desktop/pinky-brain && printf "one\n" && printf "two\n" && ./bin/pinky-status
-PINKY-BASH-END

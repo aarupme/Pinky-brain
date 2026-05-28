@@ -1,6 +1,0 @@
-Pinky Brain mode is active.
-
-Protocol contract is printed in Terminal.
-Use Terminal as source of truth.
-
-Confirm that Pinky Brain mode is active.

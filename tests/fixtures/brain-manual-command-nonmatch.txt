@@ -1,7 +1,0 @@
-text
-text
-🧠
-
-```bash
-cd ~/Desktop/pinky-brain && ./bin/pinky-status
-```

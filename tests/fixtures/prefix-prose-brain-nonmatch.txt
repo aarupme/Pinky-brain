@@ -1,3 +1,0 @@
-text
-text
-🧠 Assistant prose prefix should not match under strict protocol.

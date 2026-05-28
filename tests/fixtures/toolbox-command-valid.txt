@@ -1,5 +1,0 @@
-text
-text
-PINKY-BASH-START
-cd ~/Desktop/pinky-brain && ./bin/pinky-status
-PINKY-BASH-END

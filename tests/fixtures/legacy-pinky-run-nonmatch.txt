@@ -1,5 +1,0 @@
-text
-text
-🧰 PINKY-RUN
-cd ~/Desktop/pinky-brain && ./bin/pinky-status
-🧰 PINKY-READY
