@@ -7,19 +7,23 @@ tell application "System Events"
     set allItems to entire contents of window 1
     repeat with itemRef in allItems
       set roleText to ""
+      set valueText to ""
       set descText to ""
-
       try
         set roleText to role of itemRef as text
       end try
-
+      try
+        set valueText to value of itemRef as text
+      end try
       try
         set descText to description of itemRef as text
       end try
-
-      if roleText is "AXStaticText" and descText is not "" and descText is not "missing value" then
-        if length of descText > 1600 then set descText to text 1 thru 1600 of descText
-        log descText
+      if roleText is "AXStaticText" then
+        if valueText is not "" and valueText is not "missing value" then
+          log valueText
+        else if descText is not "" and descText is not "missing value" then
+          log descText
+        end if
       end if
     end repeat
   end tell

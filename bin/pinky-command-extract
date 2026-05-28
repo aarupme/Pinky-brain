@@ -11,6 +11,29 @@ mkdir -p "$RUN_DIR"
 
 # Pinky Brain deterministic bridge:
 # If Brain/operator writes .run/pinky-visible.txt, treat it as the visible command source.
+CHAT_SOURCE="$RUN_DIR/pinky-chat-visible.txt"
+if [[ ! -s "$BRIDGE_SOURCE" ]]; then
+  "$ROOT_DIR/bin/pinky-read-visible" > "$CHAT_SOURCE" 2>&1 || true
+  if grep -q "# pinky" "$CHAT_SOURCE" 2>/dev/null; then
+    python3 - "$CHAT_SOURCE" "$RUN_DIR/pinky-command.candidate" <<'PY'
+import re, sys
+src, dst = sys.argv[1], sys.argv[2]
+text = open(src, errors="replace").read()
+blocks = re.findall(r"```(?:bash)?\\s*(.*?)```", text, flags=re.S)
+candidates = [b.strip() for b in blocks if "# pinky" in b]
+if not candidates:
+    lines = [l.strip() for l in text.splitlines() if "# pinky" in l]
+    candidates = lines[-1:] if lines else []
+if candidates:
+    open(dst, "w").write(candidates[-1].strip() + "\\n")
+    print("pinky-command-extract-source=chat-visible")
+    raise SystemExit(0)
+raise SystemExit(2)
+PY
+    exit 0
+  fi
+fi
+
 BRIDGE_SOURCE="$RUN_DIR/pinky-visible.txt"
 if [[ -s "$BRIDGE_SOURCE" ]]; then
   cp "$BRIDGE_SOURCE" "$RUN_DIR/pinky-command.candidate"
