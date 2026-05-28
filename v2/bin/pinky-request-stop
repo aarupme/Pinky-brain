@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-cd "$(dirname "$0")/../.."
-mkdir -p v2/.run
-touch v2/.run/stop-request
-echo PINKY_STOP_REQUESTED
