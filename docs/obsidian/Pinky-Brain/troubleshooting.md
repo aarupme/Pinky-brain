@@ -99,16 +99,16 @@ Action:
 2. Current operator contract is v2 envelope only.
 3. Move legacy syntax explanations to `legacy-and-retired-syntax.md`.
 
-## Wrong terminal used
+## Wrong terminal mode used
 
-Terminal roles:
+Single Terminal modes:
 
 - Single Terminal Mode = patch/recover with watcher stopped
 - Live verification = start watcher only for the bounded test
 
 Action:
 
-1. Stop and identify which terminal is doing what.
+1. Stop and identify whether the watcher is running.
 2. Stop the watcher before patching or recovery.
 3. Use the single Terminal for inspection, recovery, or manual writes.
 

@@ -27,7 +27,7 @@ Rules:
 - Avoid hidden/background loops.
 - Avoid recursive status-log reading.
 
-Terminal roles:
+Single Terminal Mode:
 - Single Terminal Mode = patch/recover with watcher stopped.
 - Live verification = start watcher only for the bounded test.
 

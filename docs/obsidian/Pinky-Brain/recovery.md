@@ -87,4 +87,4 @@ Single Terminal Mode is the default.
 
 Recovery happens in the same single Terminal after stopping the watcher.
 
-When recovering, do not blur the two terminals.
+When recovering, do not mix modes: stop the watcher before patching, inspecting, or cleaning runtime state.
