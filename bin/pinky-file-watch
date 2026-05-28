@@ -15,6 +15,8 @@ touch "$INBOX"
 printf "PINKY file watcher started inbox=%s\n" "$INBOX"
 
 while true; do
+  osascript -e 'tell application "Visual Studio Code" to activate' -e 'tell application "System Events" to keystroke "s" using command down' >/dev/null 2>&1 || true
+  sleep 0.2
   if [[ -s "$INBOX" ]]; then
     first="$(grep -v "^[[:space:]]*$" "$INBOX" | head -1 || true)"
     if [[ "$first" == "# pinky" ]]; then
