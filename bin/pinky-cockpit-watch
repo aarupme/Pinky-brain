@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUN_DIR="$ROOT_DIR/.run"
 LAST_SUCCESS_HASH_FILE="$RUN_DIR/pinky-cockpit-watch.last-success-hash"
 LAST_ATTEMPT_HASH_FILE="$RUN_DIR/pinky-cockpit-watch.last-attempt-hash"
+SEEN_HASHES_FILE="$RUN_DIR/pinky-command.seen-hashes"
 WATCHER_PID="$RUN_DIR/pinky-cockpit-watch.pid"
 STATE_FILE="$RUN_DIR/pinky-beacon.state"
 LOOP_STOP="$RUN_DIR/pinky-loop.stop"
@@ -68,6 +69,8 @@ while true; do
 
     if [[ -n "$command_text" && "$command_hash" != "$last_success_hash" && "$command_hash" != "$last_attempt_hash" ]]; then
       printf "%s\n" "$command_hash" > "$LAST_ATTEMPT_HASH_FILE"
+      touch "$SEEN_HASHES_FILE"
+      grep -qx "$command_hash" "$SEEN_HASHES_FILE" || printf "%s\n" "$command_hash" >> "$SEEN_HASHES_FILE"
       cp "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-transport.input"
 
       "$ROOT_DIR/bin/pinky-preflight"

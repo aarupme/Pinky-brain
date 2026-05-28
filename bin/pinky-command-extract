@@ -6,6 +6,7 @@ TMP_FILE="$(mktemp)"
 CANDIDATE_FILE="$RUN_DIR/pinky-command.candidate"
 CODE_EDITOR_FILE="$RUN_DIR/pinky-code-editor-command.txt"
 LAST_HASH_FILE="$RUN_DIR/pinky-command.last-hash"
+SEEN_HASHES_FILE="$RUN_DIR/pinky-command.seen-hashes"
 mkdir -p "$RUN_DIR"
 trap 'rm -f "$TMP_FILE"' EXIT
 READ_VISIBLE="${PINKY_READ_VISIBLE:-$ROOT_DIR/bin/pinky-read-visible}"
@@ -71,6 +72,12 @@ if [[ -s "$CANDIDATE_FILE" ]]; then
     last_hash="$(cat "$LAST_HASH_FILE")"
   fi
   if [[ -n "$last_hash" && "$command_hash" == "$last_hash" ]]; then
+    rm -f "$CANDIDATE_FILE"
+    echo "pinky_command=duplicate"
+    echo "candidate_hash=$command_hash"
+    exit 3
+  fi
+  if [[ -s "$SEEN_HASHES_FILE" ]] && grep -qx "$command_hash" "$SEEN_HASHES_FILE"; then
     rm -f "$CANDIDATE_FILE"
     echo "pinky_command=duplicate"
     echo "candidate_hash=$command_hash"
