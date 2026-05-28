@@ -91,12 +91,15 @@ while true; do
       printf "PINKY cockpit completion settled hash=%s exit=%s\n" "$command_hash" "$run_code"
       printf "PINKY cockpit state=watching last_exit=%s\n" "$run_code"
       "$ROOT_DIR/bin/pinky-completion-barrier" "$command_hash" "$run_code"
-      if [[ "$max_cycles" == "0" ]]; then
+      if [[ "$max_cycles" == "0" && "${PINKY_ALLOW_NARF:-0}" == "1" ]]; then
+        printf "PINKY cockpit narf_gate=allowed exit=%s\n" "$run_code"
         if [[ "$run_code" -eq 0 ]]; then
           "$ROOT_DIR/bin/pinky-send" --text "Narf!"
         else
           "$ROOT_DIR/bin/pinky-send" --text "NARF failed=true reason=transport-exit-$run_code"
         fi
+      elif [[ "$max_cycles" == "0" ]]; then
+        printf "PINKY cockpit narf_gate=blocked reason=PINKY_ALLOW_NARF-not-1 exit=%s\n" "$run_code"
       fi
     else
       rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason" "$RUN_DIR/pinky-transport.input"
