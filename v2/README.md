@@ -1,6 +1,6 @@
-# Pinky Brain v2
+# Pinky Brain
 
-Pinky v2 is a tiny local macOS transport tool.
+Pinky Brain is a tiny local macOS transport tool.
 
 ## Runtime model
 
@@ -54,7 +54,7 @@ No logs or ledger architecture.
 
 ## V2 isolation contract
 
-Pinky v2 is the active inline Terminal transport.
+Pinky Brain is the active inline Terminal transport.
 
 V2 runtime is intentionally isolated from legacy Pinky mechanisms:
 
@@ -82,7 +82,7 @@ Active v2 runtime surface:
 Legacy files outside `v2/` may remain for archive/reference only. They are not part of the v2 product path.
 ## V2 lifecycle contract
 
-Pinky v2 is one live transport session per ChatGPT chat.
+Pinky Brain is one live transport session per ChatGPT chat.
 
 - Brain starts Pinky once at the beginning of a ChatGPT chat.
 - Pinky remains running until the chat or workstream is ending.

@@ -5,11 +5,11 @@ mkdir -p v2/.run
 on_stop() {
 id="$(cat v2/.run/expected-id 2>/dev/null || printf 0001)"
 v2/bin/pinky-send-chatgpt "Pinky stopped expected=PINKY_BASH_${id}" || true
-printf "\nPINKY_V2_STOPPED expected=PINKY_BASH_%s\n" "$id"
+printf "\nPINKY_BRAIN_STOPPED expected=PINKY_BASH_%s\n" "$id"
 exit 0
 }
 trap on_stop INT TERM
-printf "\nPINKY_V2_CONSOLE_LISTENING\n"
+printf "\nPINKY_BRAIN_CONSOLE_LISTENING\n"
 while true; do
 id="$(cat v2/.run/expected-id 2>/dev/null || printf 0001)"
 raw="$(v2/bin/pinky-read-chatgpt || true)"
@@ -31,7 +31,7 @@ if [ -f v2/.run/stop-request ]; then
 rm -f v2/.run/stop-request
 printf "%s\n" "$next" > v2/.run/expected-id
 v2/bin/pinky-send-chatgpt "Pinky stopped expected=PINKY_BASH_${next}" || true
-printf "\nPINKY_V2_STOPPED expected=PINKY_BASH_%s\n" "$next"
+printf "\nPINKY_BRAIN_STOPPED expected=PINKY_BASH_%s\n" "$next"
 exit 0
 fi
 printf "%s\n" "$next" > v2/.run/expected-id
