@@ -67,6 +67,8 @@ while true; do
       fi
 
       printf "PINKY cockpit state=watching last_exit=%s\n" "$run_code"
+    else
+      rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason"
     fi
   fi
 
