@@ -22,6 +22,11 @@ rule.match_expected_id_only=true
 rule.ascii_command_body=true
 rule.no_smart_punctuation=true
 rule.no_markdown_fences=true
+rule.no_heredocs=true
+rule.no_pager=true
+rule.no_raw_git_diff=true
+rule.no_raw_git_log=true
+rule.no_multiline_quoted_strings=true
 rule.no_questions_with_bash=true
 rule.brain_does_not_move_work_bash=true
 callback.success=Narf! expected=PINKY_BASH_NEXT
