@@ -1,2 +1,2 @@
 PINKY-CODE-RUN
-No code block follows.
+text without current v2 envelope

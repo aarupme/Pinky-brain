@@ -1,5 +1,5 @@
 text
 text
-🧰 PINKY-RUN
+PINKY-BASH-START
 cd ~/Desktop/pinky-brain && git status --short --branch
-🧰 PINKY-READY
+PINKY-BASH-END
