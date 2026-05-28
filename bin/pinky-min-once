@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+RUN_DIR="$ROOT_DIR/.run"
+mkdir -p "$RUN_DIR" logs
+
+VISIBLE="$RUN_DIR/pinky-min-visible.txt"
+CMD="$RUN_DIR/pinky-min-command.sh"
+WRAP="$RUN_DIR/pinky-min-wrapper.sh"
+OUT="$RUN_DIR/pinky-min-run.out"
+ID="$(date +%Y%m%d%H%M%S)-$$"
+DONE="PINKY_MIN_DONE:$ID:"
+
+"$ROOT_DIR/bin/pinky-read-visible" > "$VISIBLE" 2>&1 || true
+
+awk '/^PINKY:[[:space:]]*/ {sub(/^PINKY:[[:space:]]*/, "", $0); cmd=$0} END{if(cmd!="") print cmd}' "$VISIBLE" > "$CMD"
+
+if [[ ! -s "$CMD" ]]; then
+  printf "PINKY_MIN no command found. Expected visible line: PINKY: <bash>\n" >&2
+  exit 2
+fi
+
+printf "\n=== PINKY MIN PICKED COMMAND id=%s ===\n" "$ID"
+cat "$CMD"
+printf "\n=== PINKY MIN EXECUTE ===\n"
+
+: > "$WRAP"
+printf "%s\n" "#!/usr/bin/env bash" "set +e" > "$WRAP"
+cat "$CMD" >> "$WRAP"
+printf "%s\n" "rc=\$?" "printf \"\\n%s%s\\n\" \"$DONE\" \"\$rc\"" "exit \"\$rc\"" >> "$WRAP"
+chmod +x "$WRAP"
+
+set +e
+bash "$WRAP" 2>&1 | tee "$OUT"
+rc="${PIPESTATUS[0]}"
+set -e
+
+if grep -q "$DONE" "$OUT"; then
+  printf "PINKY_MIN completion_seen=yes exit=%s id=%s\n" "$rc" "$ID"
+  "$ROOT_DIR/bin/pinky-send" --text "Narf!"
+else
+  printf "PINKY_MIN completion_seen=no exit=%s id=%s\n" "$rc" "$ID" >&2
+  exit 3
+fi
