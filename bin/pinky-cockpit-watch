@@ -82,13 +82,19 @@ while true; do
         completed_success=1
       fi
 
+      rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason" "$RUN_DIR/pinky-transport.input"
+      : > "$RUN_DIR/pinky-code-editor-command.txt"
       printf "PINKY cockpit state=watching last_exit=%s\n" "$run_code"
-      if [[ "$run_code" -eq 0 && "$max_cycles" == "0" ]]; then
-        printf "Narf!" > "$RUN_DIR/pinky-narf.txt"
-        "$ROOT_DIR/bin/pinky-send" --file "$RUN_DIR/pinky-narf.txt"
+      if [[ "$max_cycles" == "0" ]]; then
+        if [[ "$run_code" -eq 0 ]]; then
+          "$ROOT_DIR/bin/pinky-send" --text "Narf!"
+        else
+          "$ROOT_DIR/bin/pinky-send" --text "NARF failed=true reason=transport-exit-$run_code"
+        fi
       fi
     else
-      rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason"
+      rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason" "$RUN_DIR/pinky-transport.input"
+      : > "$RUN_DIR/pinky-code-editor-command.txt"
     fi
   fi
 
