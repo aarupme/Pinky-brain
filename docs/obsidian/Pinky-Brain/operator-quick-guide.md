@@ -41,3 +41,20 @@ Stop and recover before continuing if:
 ## Recovery rule
 
 Stop the watcher first. Then inspect with bounded commands from the same single Terminal.
+
+## Stable source contract
+
+The executable source is `.run/pinky-code-editor-command.txt`.
+
+Normal chat is not executable. Visible chat history is not a command source. This prevents old envelopes, markdown, terminal echoes, and UI markup from being picked up as commands.
+
+Normal workflow:
+
+1. Write one bounded envelope into `.run/pinky-code-editor-command.txt`.
+2. Start or keep the visible cockpit watcher running.
+3. Pinky extracts the command from that file only.
+4. Pinky executes visibly in Terminal.
+5. Pinky clears candidate and command-source state.
+6. Pinky sends `Narf!` after the terminal workflow completes.
+
+Visible-chat fallback is test-only and must be enabled explicitly with `PINKY_ALLOW_VISIBLE_FALLBACK=1`.
