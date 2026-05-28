@@ -8,7 +8,26 @@ if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then kill "$pid" 2>/dev/null || 
 rm -f v2/.run/listener.pid
 fi
 printf "0001\n" > v2/.run/expected-id
-printf "expected=PINKY_BASH_0001\n"
-printf "Pinky v2 runs in this Terminal window. Stop with Ctrl-C.\n"
+cat <<'PINKY_BOOT_PROTOCOL'
+PINKY_V2_BOOT_PROTOCOL
+role.brain=human_decision_only
+role.chatgpt=planner_operator
+role.pinky=terminal_transport
+source_of_truth=terminal
+expected=PINKY_BASH_0001
+syntax.start=PINKY_BASH_0001
+syntax.end=PINKY_BASH_END
+rule.one_block_per_response=true
+rule.match_expected_id_only=true
+rule.ascii_command_body=true
+rule.no_smart_punctuation=true
+rule.no_markdown_fences=true
+rule.no_questions_with_bash=true
+rule.brain_does_not_move_work_bash=true
+callback.success=Narf! expected=PINKY_BASH_NEXT
+callback.failure=NARF failed=true id=PINKY_BASH_CURRENT exit=RC expected=PINKY_BASH_NEXT
+stop.command=v2/bin/pinky-request-stop
+PINKY_V2_BOOT_PROTOCOL_END
+PINKY_BOOT_PROTOCOL
 v2/bin/pinky-send-chatgpt "Pinky started expected=PINKY_BASH_0001" || true
 exec v2/bin/pinky-listen
