@@ -27,6 +27,8 @@ rule.brain_does_not_move_work_bash=true
 callback.success=Narf! expected=PINKY_BASH_NEXT
 callback.failure=NARF failed=true id=PINKY_BASH_CURRENT exit=RC expected=PINKY_BASH_NEXT
 stop.command=v2/bin/pinky-request-stop
+stop.only_when_leaving_chat=true
+idle.behavior=no_command_block
 PINKY_V2_BOOT_PROTOCOL_END
 PINKY_BOOT_PROTOCOL
 v2/bin/pinky-send-chatgpt "Pinky started expected=PINKY_BASH_0001" || true

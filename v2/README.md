@@ -80,3 +80,15 @@ Active v2 runtime surface:
 - `v2/.run/`
 
 Legacy files outside `v2/` may remain for archive/reference only. They are not part of the v2 product path.
+## V2 lifecycle contract
+
+Pinky v2 is one live transport session per ChatGPT chat.
+
+- Brain starts Pinky once at the beginning of a ChatGPT chat.
+- Pinky remains running until the chat or workstream is ending.
+- ChatGPT must not start and stop Pinky as a test harness.
+- If no execution is needed, ChatGPT sends no Pinky bash block.
+- Manual inspection mode means normal Brain-run Terminal commands, not Pinky stop/start cycling.
+- `v2/bin/pinky-request-stop` is only for intentionally leaving the chat/workstream.
+- Boot tests must not stop Pinky unless the test is explicitly a shutdown test.
+
