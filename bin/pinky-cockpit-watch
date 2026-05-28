@@ -47,6 +47,10 @@ cleanup() {
 }
 trap cleanup EXIT
 
+if [[ "${PINKY_ALLOW_NARF:-0}" == "1" ]]; then
+  printf "PINKY WARNING: live Narf mode is enabled. Start this only as a standalone final runtime command.\n"
+fi
+
 printf "PINKY cockpit state=watching\n"
 
 cycle=0

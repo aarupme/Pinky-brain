@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+RUN_DIR="$ROOT_DIR/.run"
+mkdir -p "$RUN_DIR"
+
+# Hard rule:
+# This script starts the live auto-Narf runtime only.
+# Do not append proof commands, sleep/status checks, git work, or patch work after this.
+# If Brain needs diagnostics, use PINKY_ALLOW_NARF=0 or bounded PINKY_MAX_CYCLES tests.
+
+if [[ "${PINKY_BRAIN_PATCH_MODE:-0}" == "1" ]]; then
+  printf 'REFUSED: live Narf runtime cannot start during Brain patch/test mode\n' >&2
+  exit 2
+fi
+
+pkill -f 'bin/pinky-cockpit-watch' 2>/dev/null || true
+sleep 1
+
+rm -f "$RUN_DIR/pinky-command.last-hash" \
+      "$RUN_DIR/pinky-command.candidate" \
+      "$RUN_DIR/pinky-visible.txt" \
+      "$RUN_DIR/pinky-cockpit-watch.last-attempt-hash" \
+      "$RUN_DIR/pinky-cockpit-watch.last-success-hash" \
+      "$RUN_DIR/pinky-transport-complete" \
+      "$RUN_DIR/pinky-real-runtime.log" \
+      "$RUN_DIR/pinky-real-runtime.pid"
+
+printf 'PINKY starting real runtime. Auto-Narf enabled. Do not run trailing shell work in this command.\n'
+
+PINKY_ALLOW_NARF=1 PINKY_SLEEP_SECONDS=1 "$ROOT_DIR/bin/pinky-cockpit-watch" \
+  > "$RUN_DIR/pinky-real-runtime.log" 2>&1 &
+echo $! > "$RUN_DIR/pinky-real-runtime.pid"
+
+printf 'PINKY real runtime pid=%s log=%s\n' "$(cat "$RUN_DIR/pinky-real-runtime.pid")" "$RUN_DIR/pinky-real-runtime.log"
+printf 'PINKY real runtime started\n'
