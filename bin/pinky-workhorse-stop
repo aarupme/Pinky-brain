@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+PID_FILE="$RUN_DIR/pinky-workhorse.pid"
+cd "$ROOT_DIR"
+if [[ -f "$PID_FILE" ]]; then
+  pid="$(cat "$PID_FILE" 2>/dev/null || true)"
+  if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+    kill "$pid" 2>/dev/null || true
+    sleep 0.5
+  fi
+fi
+rm -f "$PID_FILE" "$RUN_DIR/pinky-cockpit-watch.pid" "$RUN_DIR/pinky-cockpit-watch.lock"
+"$ROOT_DIR/bin/pinky-set-state" stopped >/dev/null
+echo "PINKY workhorse stopped"
