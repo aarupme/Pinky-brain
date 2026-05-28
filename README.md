@@ -31,3 +31,9 @@ Safety:
 - No pagers.
 - No raw git diff or raw git log.
 - Use git --no-pager for git inspection.
+
+Launch:
+
+- Double-click ~/Desktop/Pinky.command to start Pinky in Terminal.
+- Developer launch: cd ~/Desktop/pinky-brain && v2/bin/pinky-start.
+- Reinstall launcher: v2/install/install-desktop-launcher.
