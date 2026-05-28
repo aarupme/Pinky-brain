@@ -101,3 +101,31 @@ log_tail "pinky-command-run.log" "$LOG_DIR/pinky-command-run.log"
 
 printf '\n--- report ---\n'
 "$ROOT_DIR/bin/pinky-cockpit"
+
+
+latest_transport_log="$(ls -t "$ROOT_DIR"/logs/transport-runs/*.log 2>/dev/null | head -1 || true)"
+if [[ -n "${latest_transport_log:-}" ]]; then
+  latest_transport_base="$(basename "$latest_transport_log")"
+  latest_transport_time="${latest_transport_base:0:8} ${latest_transport_base:9:2}:${latest_transport_base:11:2}:${latest_transport_base:13:2}"
+  latest_transport_hash="$(printf "%s" "$latest_transport_base" | sed -E 's/^[0-9]{8}-[0-9]{6}-([^.]+)\.log$/\1/')"
+  latest_transport_exit="unknown"
+
+  if grep -q "PINKY transport complete exit=" "$latest_transport_log" 2>/dev/null; then
+    latest_transport_exit="$(grep "PINKY transport complete exit=" "$latest_transport_log" | tail -1 | sed -E 's/.*exit=([0-9]+).*/\1/')"
+  elif [[ -n "$latest_transport_hash" ]]; then
+    latest_transport_exit="$(grep -R "hash=$latest_transport_hash" "$ROOT_DIR/logs" 2>/dev/null | grep "PINKY transport complete exit=" | tail -1 | sed -E 's/.*exit=([0-9]+).*/\1/')"
+    [[ -n "$latest_transport_exit" ]] || latest_transport_exit="unknown"
+  fi
+
+  echo "last_transport=time=$latest_transport_time exit_code=$latest_transport_exit log=$latest_transport_log hash=$latest_transport_hash"
+fi
+
+
+completion_sentinel="$ROOT_DIR/.run/pinky-transport-complete"
+if [[ -s "$completion_sentinel" ]]; then
+  sentinel_hash="$(grep '^hash=' "$completion_sentinel" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
+  sentinel_exit="$(grep '^exit_code=' "$completion_sentinel" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
+  sentinel_time="$(grep '^completed_at=' "$completion_sentinel" 2>/dev/null | tail -1 | cut -d= -f2- || true)"
+  echo "last_completion=time=${sentinel_time:-unknown} exit_code=${sentinel_exit:-unknown} hash=${sentinel_hash:-unknown} file=$completion_sentinel"
+fi
+

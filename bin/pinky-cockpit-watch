@@ -87,7 +87,10 @@ while true; do
 
       rm -f "$RUN_DIR/pinky-command.candidate" "$RUN_DIR/pinky-command.candidate.classification" "$RUN_DIR/pinky-command.candidate.reason" "$RUN_DIR/pinky-transport.input"
       : > "$RUN_DIR/pinky-code-editor-command.txt"
+      printf "hash=%s\nexit_code=%s\ncompleted_at=%s\n" "$command_hash" "$run_code" "$(date +%Y%m%d-%H%M%S)" > "$RUN_DIR/pinky-transport-complete"
+      printf "PINKY cockpit completion settled hash=%s exit=%s\n" "$command_hash" "$run_code"
       printf "PINKY cockpit state=watching last_exit=%s\n" "$run_code"
+      "$ROOT_DIR/bin/pinky-completion-barrier" "$command_hash" "$run_code"
       if [[ "$max_cycles" == "0" ]]; then
         if [[ "$run_code" -eq 0 ]]; then
           "$ROOT_DIR/bin/pinky-send" --text "Narf!"

@@ -8,6 +8,16 @@ CODE_EDITOR_FILE="$RUN_DIR/pinky-code-editor-command.txt"
 LAST_HASH_FILE="$RUN_DIR/pinky-command.last-hash"
 SEEN_HASHES_FILE="$RUN_DIR/pinky-command.seen-hashes"
 mkdir -p "$RUN_DIR"
+
+# Pinky Brain deterministic bridge:
+# If Brain/operator writes .run/pinky-visible.txt, treat it as the visible command source.
+BRIDGE_SOURCE="$RUN_DIR/pinky-visible.txt"
+if [[ -s "$BRIDGE_SOURCE" ]]; then
+  cp "$BRIDGE_SOURCE" "$RUN_DIR/pinky-command.candidate"
+  printf "pinky-command-extract-source=bridge file=%s\n" "$BRIDGE_SOURCE"
+  exit 0
+fi
+
 trap 'rm -f "$TMP_FILE"' EXIT
 READ_VISIBLE="${PINKY_READ_VISIBLE:-$ROOT_DIR/bin/pinky-read-visible}"
 if [[ -s "$CODE_EDITOR_FILE" ]]; then

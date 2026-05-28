@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+mkdir -p "$RUN_DIR"
+
+INPUT="${1:-}"
+if [[ -z "$INPUT" ]]; then
+  cat > "$RUN_DIR/pinky-visible.txt"
+else
+  printf "%s\n" "$INPUT" > "$RUN_DIR/pinky-visible.txt"
+fi
+
+printf "PINKY-BRIDGE submitted visible command to %s\n" "$RUN_DIR/pinky-visible.txt"
