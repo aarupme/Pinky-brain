@@ -1,37 +1,47 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cat <<'EOF'
-Pinky Brain Protocol Contract
+cat <<'PINKY_PROTOCOL'
+PINKY BRAIN PROTOCOL
 
-Runtime lanes:
-- Brain/user Terminal lane: manual commands shown after the brain symbol.
-- Pinky automatic lane: visible direct syntax ending in # pinky.
-- Conversation continuation lane: standalone continuation signal only.
+Current operator contract: v2 envelope only.
 
-Standalone control signals:
-- Narf! means Pinky automated continuation callback.
-- mouse symbol means safe continuation is available.
-- brain symbol means human/model decision required.
-- stop symbol means hard stop.
-- k or K means manual kill switch.
+Use Pinky lane only when:
+- Pinky is awake.
+- Terminal 1 is running the cockpit watcher.
+- The message contains exactly one runnable v2 envelope.
+- The payload is safe, bounded, and starts from the repo.
 
-Strict signal rule:
-- Runtime control signals must be standalone lines only.
-- Prefix prose plus a signal must not match.
-- Do not patch Pinky to compensate for inconsistent assistant formatting unless the protocol is intentionally redesigned and fixture-tested.
+Envelope syntax:
 
-Command execution rule:
-- Pinky cockpit executes only project-prefixed visible direct commands ending in # pinky.
-- Human/manual commands belong in the Brain/user Terminal lane.
-- High-impact actions require brain review.
+PINKY-BASH-START
+cd ~/Desktop/pinky-brain && <safe command>
+PINKY-BASH-END
 
-Recommended status check:
-cd ~/Desktop/pinky-brain && ./bin/pinky-status
-EOF
+Rules:
+- Do not use retired suffix-only # pinky syntax.
+- Do not use PINKY-RUN or PINKY-CODE-RUN as the normal operator contract.
+- Do not send Pinky envelopes when Pinky is sleeping or stopped.
+- Do not send empty status-only Pinky messages.
+- Do not run commands that can trap Terminal in quote, heredoc, or continuation prompts.
+- Avoid hidden/background loops.
+- Avoid recursive status-log reading.
 
-Binary lane rule:
-- one reply targets one operator only
-- Brain lane and Pinky lane must not be mixed
-- Terminal 1 is cockpit watcher
-- Terminal 2 is Brain admin
+Terminal roles:
+- Terminal 1 = Pinky cockpit watcher only.
+- Terminal 2 = Brain/admin/recovery only.
+
+Runtime callbacks:
+- Cockpit startup sends Narf! when watching.
+- Every completed Pinky execution sends Narf!.
+
+Safety gates:
+- Preflight before cockpit startup.
+- Preflight before every transport execution.
+- Bash syntax check before execution.
+- Transport output capped at write time.
+- Log threshold guard.
+- Singleton cockpit watcher lock.
+
+If Pinky fails to respond, switch to Brain recovery in Terminal 2.
+PINKY_PROTOCOL
