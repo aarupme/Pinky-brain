@@ -15,6 +15,7 @@ id="$(cat v2/.run/expected-id 2>/dev/null || printf 0001)"
 raw="$(v2/bin/pinky-read-chatgpt || true)"
 if printf "%s\n" "$raw" | v2/bin/pinky-parse-next "$id" > v2/.run/current-command.sh; then
 if [ ! -s v2/.run/current-command.sh ]; then sleep 1; continue; fi
+v2/bin/pinky-normalize-command v2/.run/current-command.sh
 chmod +x v2/.run/current-command.sh
 printf "\nPINKY_RUNNING_%s\n" "$id"
 printf "\n--- command ---\n"

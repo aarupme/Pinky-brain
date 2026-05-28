@@ -1,25 +1,34 @@
 #!/usr/bin/env python3
+import re
 import sys
 from pathlib import Path
-p = Path(sys.argv[1])
-s = p.read_text()
-m = {
+
+path = Path(sys.argv[1])
+text = path.read_text()
+
+# Smart quotes to ASCII quotes.
+quote_map = {
     chr(0x2018): chr(39),
     chr(0x2019): chr(39),
-    chr(0x201a): chr(39),
-    chr(0x201b): chr(39),
-    chr(0x201c): chr(34),
-    chr(0x201d): chr(34),
-    chr(0x201e): chr(34),
-    chr(0x201f): chr(34),
-    chr(0x2010): chr(45),
-    chr(0x2011): chr(45),
-    chr(0x2012): chr(45),
-    chr(0x2013): chr(45),
-    chr(0x2014): chr(45),
-    chr(0x2015): chr(45),
-    chr(0x2212): chr(45),
+    chr(0x201A): chr(39),
+    chr(0x201B): chr(39),
+    chr(0x201C): chr(34),
+    chr(0x201D): chr(34),
+    chr(0x201E): chr(34),
+    chr(0x201F): chr(34),
 }
-for a, b in m.items():
-    s = s.replace(a, b)
-p.write_text(s)
+for src, dst in quote_map.items():
+    text = text.replace(src, dst)
+
+# Unicode dash/minus handling.
+# ChatGPT often transforms CLI long flags like --short into –short or —short.
+# Preserve those as long flags when the dash is followed by an ASCII letter.
+dash_chars = "".join(chr(x) for x in [
+    0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015, 0x2212
+])
+dash_class = "[" + re.escape(dash_chars) + "]"
+
+text = re.sub(dash_class + r"(?=[A-Za-z])", "--", text)
+text = re.sub(dash_class, "-", text)
+
+path.write_text(text)
