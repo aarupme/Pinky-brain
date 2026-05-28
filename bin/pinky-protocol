@@ -33,7 +33,7 @@ Terminal roles:
 
 Runtime callbacks:
 - Cockpit startup prints watching state but does not send Narf!.
-- `Narf!` is sent only by the outermost completed terminal workflow, after all verification and cleanup steps have finished.
+- `Narf!` is sent to ChatGPT only by the outermost completed terminal workflow, using ./bin/pinky-send --text 'Narf!', after all verification and cleanup steps have finished.
 
 Safety gates:
 - Preflight before cockpit startup.
