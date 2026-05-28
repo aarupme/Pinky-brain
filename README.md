@@ -4,19 +4,19 @@ Pinky Brain is a lightweight inline Terminal transport.
 
 Active product path:
 
-- v2/README.md
-- v2/bin/pinky-start
-- v2/bin/pinky-listen
-- v2/bin/pinky-parse-next
-- v2/bin/pinky-read-chatgpt
-- v2/bin/pinky-send-chatgpt
-- v2/bin/pinky-normalize-command
-- v2/bin/pinky-request-stop
-- v2/bin/pinky-stop
+- runtime/README.md
+- runtime/bin/pinky-start
+- runtime/bin/pinky-listen
+- runtime/bin/pinky-parse-next
+- runtime/bin/pinky-read-chatgpt
+- runtime/bin/pinky-send-chatgpt
+- runtime/bin/pinky-normalize-command
+- runtime/bin/pinky-request-stop
+- runtime/bin/pinky-stop
 
 Runtime state:
 
-- v2/.run/ is local runtime state and is ignored by git.
+- runtime/.run/ is local runtime state and is ignored by git.
 
 Lifecycle:
 
@@ -35,8 +35,8 @@ Safety:
 Launch:
 
 - Double-click ~/Desktop/Pinky Brain.command to start Pinky in Terminal.
-- Developer launch: cd ~/Desktop/pinky-brain && v2/bin/pinky-start.
-- Reinstall launcher: v2/install/install-desktop-launcher.
+- Developer launch: cd ~/Desktop/pinky-brain && runtime/bin/pinky-start.
+- Reinstall launcher: runtime/install/install-desktop-launcher.
 
 Launcher status:
 

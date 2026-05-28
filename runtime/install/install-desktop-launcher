@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eu
+old_launcher="${HOME}/Desktop/Pinky.command"
+launcher="${HOME}/Desktop/Pinky Brain.command"
+rm -f "$old_launcher"
+printf "%s\n" "#!/bin/bash" > "$launcher"
+printf "%s\n" "cd ${HOME}/Desktop/pinky-brain || exit 1" >> "$launcher"
+printf "%s\n" "export GIT_PAGER=cat" >> "$launcher"
+printf "%s\n" "export PAGER=cat" >> "$launcher"
+printf "%s\n" "exec runtime/bin/pinky-start" >> "$launcher"
+chmod +x "$launcher"
+echo "installed $launcher"
