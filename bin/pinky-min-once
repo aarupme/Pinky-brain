@@ -24,6 +24,8 @@ fi
 
 printf "\n=== PINKY MIN PICKED COMMAND id=%s ===\n" "$ID"
 cat "$CMD"
+if grep -q "[<>]" "$CMD"; then printf "PINKY_MIN rejected placeholder command\n" >&2; "$ROOT_DIR/bin/pinky-send" --text "NARF failed=true reason=placeholder-command" || true; exit 4; fi
+if LC_ALL=C grep -q "[^ -~]" "$CMD"; then printf "PINKY_MIN rejected non-ascii command\n" >&2; "$ROOT_DIR/bin/pinky-send" --text "NARF failed=true reason=non-ascii-command" || true; exit 5; fi
 printf "\n=== PINKY MIN EXECUTE ===\n"
 
 : > "$WRAP"
