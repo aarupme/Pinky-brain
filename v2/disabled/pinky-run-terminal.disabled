@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+id="${1:?usage: pinky-run-terminal ID COMMAND_FILE}"
+cmd_file="${2:?usage: pinky-run-terminal ID COMMAND_FILE}"
+out_file="v2/.run/terminal-output.txt"
+rm -f "$out_file"
+wrapper="$(mktemp "${TMPDIR:-/tmp}pinky-run-${id}.XXXXXX")"
+{
+printf "%s\n" "#!/usr/bin/env bash"
+printf "%s\n" "set +e"
+printf "%s\n" "cd \"$PWD\""
+printf "%s\n" "printf '\\nPINKY_RUNNING_${id}\\n'"
+cat "$cmd_file"
+printf "%s\n" "_pinky_rc=\$?"
+printf "%s\n" "printf '\\nPINKY_DONE_${id}:%s\\n' \"\$_pinky_rc\""
+printf "%s\n" "printf '\\nPINKY_TERMINAL_READY\\n'"
+} > "$wrapper"
+chmod +x "$wrapper"
+run_line="bash \"$wrapper\" 2>&1 | tee \"$PWD/$out_file\"; printf '\\nPINKY_STABLE_TAB_READY\\n'"
+printf "\n--- launching in existing Terminal tab ---\n%s\n" "$run_line"
+osascript -e 'on run argv' -e 'tell application "Terminal" to activate' -e 'delay 0.2' -e 'tell application "Terminal" to do script item 1 of argv in selected tab of front window' -e 'end run' "$run_line"
+while true; do
+if grep -q "PINKY_DONE_${id}:" "$out_file" 2>/dev/null; then break; fi
+sleep 0.2
+done
+rc="$(sed -n "s/^PINKY_DONE_${id}://p" "$out_file" | tail -1)"
+exit "${rc:-1}"

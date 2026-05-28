@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/../.."
+mkdir -p v2/.run
+if [ -f v2/.run/listener.pid ]; then
+pid="$(cat v2/.run/listener.pid 2>/dev/null || true)"
+if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then kill "$pid" 2>/dev/null || true; fi
+rm -f v2/.run/listener.pid
+fi
+printf "0001\n" > v2/.run/expected-id
+printf "expected=PINKY_BASH_0001\n"
+printf "Pinky v2 runs in this Terminal window. Stop with Ctrl-C.\n"
+v2/bin/pinky-send-chatgpt "Pinky started expected=PINKY_BASH_0001" || true
+exec v2/bin/pinky-listen
