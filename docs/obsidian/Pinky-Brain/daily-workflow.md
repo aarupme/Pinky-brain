@@ -24,7 +24,7 @@ Expected startup behavior:
 
 1. The single Terminal starts the cockpit watcher.
 2. The watcher prints that it is watching.
-3. Pinky sends `Narf!`.
+3. The watcher prints `PINKY cockpit state=watching`. Startup does not send `Narf!`.
 4. The single Terminal remains occupied while the watcher is running.
 
 ## Send one envelope
@@ -70,7 +70,7 @@ Use it when:
 2. Assistant prepares one safe step.
 3. The single Terminal runs Pinky only while the watcher is active.
 4. The single Terminal handles admin/recovery when Pinky is stopped.
-5. Pinky reports `Narf!` after execution.
+5. The outermost terminal workflow sends `Narf!` only after execution, watcher stop, status checks, and any commit/push steps are complete.
 6. Assistant updates `Bash remaining`.
 7. Brain answers the next numbered question when needed.
 

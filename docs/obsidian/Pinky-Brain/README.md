@@ -8,7 +8,7 @@ Pinky Brain is a local macOS runtime supervision layer controlled by Brain, the 
 
 - Brain makes product, UX, architecture, and recovery decisions.
 - Assistant researches, plans, writes, and prepares safe commands.
-- Pinky executes supervised shell payloads only when awake and watched.
+- Pinky is the workhorse transport: it carries Assistant-prepared bash into the local Terminal runtime through the code-editor command source.
 - Single Terminal Mode is the default.
 - Use the same single Terminal for Brain/admin/recovery after stopping the watcher.
 
@@ -17,7 +17,7 @@ Pinky Brain is a local macOS runtime supervision layer controlled by Brain, the 
 1. Assume Pinky is sleeping or stopped until proven otherwise.
 2. Use Brain lane first.
 3. Start the cockpit watcher only for live Pinky execution or verification.
-4. Wait for `Narf!`.
+4. Confirm the watcher prints `PINKY cockpit state=watching`. Startup does not send `Narf!`.
 5. Send exactly one v2 command envelope.
 6. Wait for completion and `Narf!`.
 7. Continue only after bash remaining and delta reason are updated.
@@ -37,7 +37,7 @@ Retired `# pinky`, legacy `PINKY-RUN`, and legacy `PINKY-CODE-RUN` are not the c
 ## Manual pages
 
 - [[interaction-contract]] — how Brain, Assistant, and Pinky communicate
-- [[operator-roles]] — responsibilities and terminal separation
+- [[operator-roles]] — Brain, Assistant, and Pinky responsibilities in Single Terminal Mode
 - [[daily-workflow]] — normal day-to-day operation
 - [[operator-quick-guide]] — shortest reliable operating path
 - [[single-terminal-code-editor-workflow]] — default one-terminal workflow using the code-editor command source
