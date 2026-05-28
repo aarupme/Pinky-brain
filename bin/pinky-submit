@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+RUN_DIR="$ROOT_DIR/.run"
+COMMAND_FILE="$RUN_DIR/pinky-code-editor-command.txt"
+mkdir -p "$RUN_DIR"
+tmp="$COMMAND_FILE.tmp.$$"
+cat > "$tmp"
+if ! grep -q "^PINKY-BASH-START$" "$tmp" || ! grep -q "^PINKY-BASH-END$" "$tmp"; then
+  rm -f "$tmp"
+  echo "PINKY submit refused: missing v2 envelope" >&2
+  exit 64
+fi
+mv "$tmp" "$COMMAND_FILE"
+echo "PINKY submit wrote $COMMAND_FILE"
