@@ -12,11 +12,16 @@ trap 'rm -f "$TMP_FILE"' EXIT
 READ_VISIBLE="${PINKY_READ_VISIBLE:-$ROOT_DIR/bin/pinky-read-visible}"
 if [[ -s "$CODE_EDITOR_FILE" ]]; then
   cat "$CODE_EDITOR_FILE" > "$TMP_FILE"
-else
+elif [[ "${PINKY_ALLOW_VISIBLE_FALLBACK:-0}" == "1" ]]; then
   "$READ_VISIBLE" > "$TMP_FILE" 2>&1 || {
     echo "pinky-command-extract error: failed to read visible ChatGPT text" >&2
     exit 1
   }
+else
+  rm -f "$CANDIDATE_FILE"
+  echo "pinky_command=none"
+  echo "reason=code-editor-command-source-empty"
+  exit 3
 fi
 rm -f "$CANDIDATE_FILE"
 
