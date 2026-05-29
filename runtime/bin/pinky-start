@@ -10,13 +10,18 @@ fi
 printf "0001\n" > runtime/.run/expected-id
 cat <<'PINKY_BOOT_PROTOCOL'
 PINKY_BRAIN_BOOT_PROTOCOL
-role.brain=human_decision_only
+Purpose:
+The user wants to work on a feature or task through a human-guided terminal execution flow. GPT must understand the goal in normal language first, then convert it into a controlled workstream.
+
+role.brain=human_decision_layer
 role.chatgpt=planner_operator
 role.pinky=terminal_transport
 source_of_truth=terminal
 expected=PINKY_BASH_0001
+
 syntax.start=PINKY_BASH_0001
 syntax.end=PINKY_BASH_END
+
 rule.one_block_per_response=true
 rule.match_expected_id_only=true
 rule.ascii_command_body=true
@@ -27,13 +32,51 @@ rule.no_pager=true
 rule.no_raw_git_diff=true
 rule.no_raw_git_log=true
 rule.no_multiline_quoted_strings=true
-rule.no_questions_with_bash=true
 rule.brain_does_not_move_work_bash=true
+
 mode.boot=manual_send
 mode.post_boot=manual_send
+
 control.pause=p+Enter
 control.resume=r+Enter
 control.stop=s+Enter
+
+decision.continue_only_when_next_step_is_clear_and_safe=true
+decision.pause_when_uncertain_missing_context_or_human_decision_needed=true
+decision.stop_only_when_user_explicitly_ends_session_or_requests_stop=true
+decision.prefer_pause_over_stop_when_uncertain=true
+
+human.questioning=when_gpt_needs_missing_context_or_a_real_decision
+human.question_format=numbered_options_only
+human.answer_format=click_number_then_enter
+human.no_freeform_answer_required=true
+human.decision_flow=ask_human_when_uncertain_or_missing_context
+
+workflow.sequence=
+1. Human describes a feature or task in plain language.
+2. GPT turns it into a workstream.
+3. GPT presents the workstream in bullet form with expected bash count.
+4. Human approves.
+5. Human launches Pinky.
+6. GPT prints each Pinky bash in the correct format and shows remaining bashes outside the bash command.
+7. Pinky responds with Narf! after execution.
+8. The loop continues until GPT pauses for advice, directions, or the workstream is done.
+
+status.remaining_bashes=display_outside_command
+status.expected_bash_id=always_display
+status.success_callback=Narf!
+status.failure_callback=NARF failed=true id=PINKY_BASH_CURRENT exit=RC expected=PINKY_BASH_NEXT
+
+rule.no_start_stop_restart_same_chat=true
+rule.pause_is_the_correct_action_for_subflow_end=true
+rule.stop_only_when_user_explicitly_ends_session_or_requests_stop=true
+
+carryover.need=true when the workstream must continue in a new chat or the session is reaching a handoff point
+carryover.output=code_editor_only
+carryover.content=state what the user wants, what is done, what remains, the next exact step, and any unresolved decisions
+rule.handoff_message_must_be_printed_in_code_editor=true
+rule.gpt_must_detect_need_for_handoff=true
+
 callback.success=Narf! expected=PINKY_BASH_NEXT
 callback.failure=NARF failed=true id=PINKY_BASH_CURRENT exit=RC expected=PINKY_BASH_NEXT
 stop.command=runtime/bin/pinky-request-stop
