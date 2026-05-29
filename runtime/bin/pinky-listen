@@ -8,9 +8,30 @@ runtime/bin/pinky-send-chatgpt "Pinky stopped expected=PINKY_BASH_${id}" || true
 printf "\nPINKY_BRAIN_STOPPED expected=PINKY_BASH_%s\n" "$id"
 exit 0
 }
+on_pause() {
+id="$(cat runtime/.run/expected-id 2>/dev/null || printf 0001)"
+runtime/bin/pinky-send-chatgpt "Pinky paused expected=PINKY_BASH_${id}" || true
+printf "\nPINKY_BRAIN_PAUSED expected=PINKY_BASH_%s\n" "$id"
+while true; do
+if [ -f runtime/.run/stop-request ]; then
+on_stop
+fi
+if [ -f runtime/.run/resume-request ]; then
+rm -f runtime/.run/resume-request
+runtime/bin/pinky-send-chatgpt "Pinky resumed expected=PINKY_BASH_${id}" || true
+printf "\nPINKY_BRAIN_RESUMED expected=PINKY_BASH_%s\n" "$id"
+break
+fi
+sleep 1
+done
+}
 trap on_stop INT TERM
 printf "\nPINKY_BRAIN_CONSOLE_LISTENING\n"
 while true; do
+if [ -f runtime/.run/pause-request ]; then
+rm -f runtime/.run/pause-request
+on_pause
+fi
 id="$(cat runtime/.run/expected-id 2>/dev/null || printf 0001)"
 raw="$(runtime/bin/pinky-read-chatgpt || true)"
 if printf "%s\n" "$raw" | runtime/bin/pinky-parse-next "$id" > runtime/.run/current-command.sh; then

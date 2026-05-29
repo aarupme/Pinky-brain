@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/../.."
+mkdir -p runtime/.run
+rm -f runtime/.run/pause-request
+touch runtime/.run/resume-request
+echo PINKY_RESUME_REQUESTED

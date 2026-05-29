@@ -29,6 +29,11 @@ rule.no_raw_git_log=true
 rule.no_multiline_quoted_strings=true
 rule.no_questions_with_bash=true
 rule.brain_does_not_move_work_bash=true
+mode.boot=manual_send
+mode.post_boot=manual_send
+control.pause=p+Enter
+control.resume=r+Enter
+control.stop=s+Enter
 callback.success=Narf! expected=PINKY_BASH_NEXT
 callback.failure=NARF failed=true id=PINKY_BASH_CURRENT exit=RC expected=PINKY_BASH_NEXT
 stop.command=runtime/bin/pinky-request-stop
