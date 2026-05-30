@@ -8,8 +8,15 @@ if [ -f runtime/.run/listener.pid ]; then
   rm -f runtime/.run/listener.pid
 fi
 printf "0001\n" > runtime/.run/expected-id
+boot_message="Pinky started expected=PINKY_BASH_0001"
+
 if [ -f runtime/boot/launch-message.txt ]; then
-  runtime/bin/pinky-send-chatgpt "$(cat runtime/boot/launch-message.txt)" || true
+  boot_message="$(cat runtime/boot/launch-message.txt)"
+
+  boot_message="${boot_message}
+
+Pinky started expected=PINKY_BASH_0001"
 fi
-runtime/bin/pinky-send-chatgpt "Pinky started expected=PINKY_BASH_0001" || true
+
+runtime/bin/pinky-send-chatgpt "$boot_message" || true
 exec runtime/bin/pinky-listen
