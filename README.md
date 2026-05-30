@@ -27,8 +27,10 @@ Lifecycle:
 
 Boot protocol:
 
-- Pinky sends: Pinky started expected=PINKY_BASH_0001
-- Pinky bash blocks must start with PINKY_BASH_0001 and end with PINKY_BASH_END
+- Pinky sends one startup message to ChatGPT.
+- That single message contains the full boot contract and the startup state line.
+- Startup state line: Pinky started expected=PINKY_BASH_0001
+- Pinky bash blocks must start with the exact expected id and end with PINKY_BASH_END.
 - Use exactly one approved command block per response.
 - ChatGPT must match the expected id exactly and ignore old or future ids.
 

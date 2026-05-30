@@ -16,8 +16,9 @@ Stop with Ctrl-C in the Pinky Terminal window.
 
 ## Notifications
 
-On start, Pinky sends ChatGPT:
-Pinky started expected=PINKY_BASH_0001
+On start, Pinky sends ChatGPT one startup message containing:
+- the full boot contract from runtime/boot/launch-message.txt
+- the startup state line: Pinky started expected=PINKY_BASH_0001
 
 On stop, Pinky sends ChatGPT:
 Pinky stopped expected=PINKY_BASH_<current>
