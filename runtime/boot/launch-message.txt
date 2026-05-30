@@ -14,9 +14,6 @@ COUNTER_MODEL:
 
 COMMAND_BLOCK_FORMAT:
 
-PINKY_BASH_0001
-<ascii-safe shell commands>
-PINKY_BASH_END
 
 Rules:
 - Exactly one approved command block per execution response.
