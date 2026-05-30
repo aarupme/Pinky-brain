@@ -1,7 +1,7 @@
 PINKY_BOOT_CONTRACT_BEGIN
 
 RUNTIME_IDENTITY:
-PinkyBrain is the active inline Terminal transport.
+Pinky Brain is the active inline Terminal transport.
 One ChatGPT chat equals one Pinky session.
 ChatGPT is stateless compute. Runtime owns truth.
 
