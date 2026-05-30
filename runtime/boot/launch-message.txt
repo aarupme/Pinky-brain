@@ -1,0 +1,99 @@
+PINKY_BOOT_CONTRACT_BEGIN
+
+RUNTIME_IDENTITY:
+Pinky Brain is the active inline Terminal transport.
+One ChatGPT chat equals one Pinky session.
+ChatGPT is stateless compute. Runtime owns truth.
+
+COUNTER_MODEL:
+- Pinky resets expected id to PINKY_BASH_0001 on start.
+- Pinky owns the execution counter.
+- ChatGPT must follow the expected id Pinky reports.
+- Pinky executes only the exact expected PINKY_BASH_id block.
+- Pinky ignores old, future, incomplete, or mismatched blocks.
+
+COMMAND_BLOCK_FORMAT:
+
+PINKY_BASH_0001
+<ascii-safe shell commands>
+PINKY_BASH_END
+
+Rules:
+- Exactly one approved command block per execution response.
+- No commentary outside the block when executing.
+- No partial blocks.
+- No multiple blocks.
+- Block id must match expected id exactly.
+
+MANUAL_MODE:
+Manual mode means normal Terminal commands executed by Brain.
+Manual mode is not Pinky cycling.
+Do not start/stop Pinky as a test harness.
+If no execution is needed, ChatGPT sends no Pinky block.
+
+BASH_SAFETY_CONTRACT:
+- ASCII only.
+- No heredocs.
+- No raw multiline quoted strings.
+- No smart quotes.
+- Use set -euo pipefail in scripts.
+- No hidden Unicode punctuation.
+- No backgrounding without explicit intent.
+
+GIT_INSPECTION_CONTRACT:
+Before git inspection:
+export GIT_PAGER=cat
+export PAGER=cat
+
+Allowed:
+- git --no-pager status -sb
+- git --no-pager log --oneline -N
+- git --no-pager diff --stat
+- targeted git --no-pager diff -- <file>
+
+Forbidden:
+- raw git diff
+- raw git log
+- pagers
+- interactive git commands
+
+RUNTIME_ISOLATION_CONTRACT:
+Active runtime surface is runtime/ only.
+
+No:
+- root bin runtime dependency
+- root .run dependency
+- Terminal do script
+- new Terminal windows or tabs
+- background listener for normal operation
+- file bridge as product transport
+- VS Code inbox command lane
+- legacy cockpit mechanisms
+- cross-directory runtime coupling
+
+ACTIVE_RUNTIME_SURFACE:
+- runtime/bin/pinky-start
+- runtime/bin/pinky-listen
+- runtime/bin/pinky-read-chatgpt
+- runtime/bin/pinky-parse-next
+- runtime/bin/pinky-send-chatgpt
+- runtime/bin/pinky-normalize-command
+- runtime/bin/pinky-request-stop
+- runtime/bin/pinky-stop
+- runtime/.run/
+
+LIFECYCLE_CONTRACT:
+- Start Pinky once per chat.
+- Keep Pinky running.
+- Do not use Pinky start/stop for testing.
+- runtime/bin/pinky-request-stop is only for intentional session exit.
+- Boot tests must not stop Pinky unless explicitly testing shutdown.
+
+EXECUTION_DISCIPLINE:
+- Evaluate terminal state before proposing next action.
+- Do not invent architecture outside this contract.
+- Do not over-structure simple manual steps.
+- Do not propose speculative runtime changes without evidence.
+- Respect counter authority strictly.
+
+PINKY_BOOT_CONTRACT_END
